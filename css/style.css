@@ -1,0 +1,174 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.34;
+    font-size: 15px;
+    color: #1c1e21;
+}
+
+a{
+    text-decoration: none;
+}
+
+/*Login-page*/
+.banner{
+    display: inline-block;
+}
+
+.banner__title{
+    color:#1877f2;
+    font-size: 3.25rem;
+}
+.banner__info{
+    font-size: 1.75rem;
+}
+
+.login{
+    width: 24.75rem;
+    background-color: #fff;
+    padding: .625rem 1rem 1.5rem;
+    border-radius: .55rem;
+    /* text-align: center; */
+}
+
+/* .login-form{
+
+} */
+
+.login-form__input{
+    padding: .875rem 1rem;
+    width: 100%;
+    border-radius: .375rem;
+    border: none;
+    margin: .375rem 0;
+    font-size: 1.0625rem;
+    border: 1px solid #dddfe2;
+}
+
+.login-form__submit{
+    background-color: #1877f2;
+    border: none;
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.login-form__submit:hover{
+    background-color: #166fe5;
+}
+
+.login__link{
+    display: block;
+    margin: 1rem auto;
+    width: fit-content;
+}
+
+.login__register{
+    margin-bottom: initial;
+    background-color: #42b72a;
+    color: #fff;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    padding: .8125rem 1rem;
+    border-radius: .375rem;
+    border: none;
+}
+
+hr{
+    border-top: 1px solid #dadde1;
+}
+
+header{
+    height: 56px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.search{
+    display: flex;
+    align-items: center;
+}
+
+.search__logo{
+    font-size: 2.5rem;
+    color: #18acfd;
+    display: block;
+    background: -webkit-linear-gradient(#18acfd, #0f6be1);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-right: .5rem;
+    cursor: pointer;
+}
+
+.search__input{
+    position: relative;
+    width: 18.25rem;
+    height: 2.5rem;
+    color: #606770;
+}
+
+.search__input-icon{
+    position: absolute;
+    top: 50%;
+    left: .75rem;
+    transform: translateY(-50%);
+}
+
+.search__input-field{
+    padding: .49375rem 1rem .5625rem 2.25rem;
+    /* padding: 7px 16px 9px 36px; */
+    border-radius: 2rem;
+    background-color: #f0f2f5;
+    border: none;
+    width: 100%;
+    height: 100%;
+    font-size: .9375rem;
+}
+
+.controls{
+    display: flex;
+    align-items: center;
+}
+
+.controls__account{
+    color: #1877f2;
+    font-weight: 600;
+    background-color: #ECF3FF;
+    border-radius: 2rem;
+    padding: 0 12px;
+}
+
+.controls__settings{
+    background-color: #e4e6eb;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: none;
+    position: relative;
+    cursor: pointer;
+}
+
+.controls__settings:hover{
+    background-color: #e0e1e4;
+}
+
+.controls__settings i{
+    font-size: 1.5rem;
+    position: absolute;
+    pointer-events: none;
+    top: 42.5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.controls--margin{
+    margin-left: .5rem;
+}
+
