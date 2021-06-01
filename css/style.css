@@ -1,47 +1,57 @@
-*{
+/* ---------------------------------- COMMON STYLINGS --------------------------------------- */
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body{
+body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.34;
     font-size: 15px;
     color: #1c1e21;
 }
 
-a{
+a {
     text-decoration: none;
 }
 
-/*Login-page*/
-.banner{
-    display: inline-block;
+textarea{
+    resize: none;
 }
 
-.banner__title{
-    color:#1877f2;
-    font-size: 3.25rem;
+/*----------------------------------------INDEX.PHP-----------------------------------------*/
+
+.c-banner {
+    width: 50%;
+    padding-top: 3.4rem;
 }
-.banner__info{
+
+.c-banner__title {
+    color: #1877f2;
+    font-size: 3.75rem;
+    letter-spacing: -.1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.c-banner__info {
     font-size: 1.75rem;
+    line-height: 32px;
+    padding-top: .5rem;
 }
 
-.login{
+.c-login {
     width: 24.75rem;
     background-color: #fff;
     padding: .625rem 1rem 1.5rem;
-    border-radius: .55rem;
-    /* text-align: center; */
+    border-radius: .51rem;
+    margin-left: auto;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
 }
 
-/* .login-form{
-
-} */
-
-.login-form__input{
-    padding: .875rem 1rem;
+.c-login-form__input {
+    padding: .9375rem 1rem;
     width: 100%;
     border-radius: .375rem;
     border: none;
@@ -50,52 +60,80 @@ a{
     border: 1px solid #dddfe2;
 }
 
-.login-form__submit{
+.c-login-form__input:focus{
+    outline-color: #1877f2;
+    outline-width: 1px;
+}
+
+.c-login-form__submit {
     background-color: #1877f2;
     border: none;
     color: #fff;
     font-size: 1.25rem;
+    padding: 0 1rem;
+    line-height: 48px;
+    margin: .6rem 0 .25rem;
     font-weight: 600;
     cursor: pointer;
+    transition: background-color .25s ease-out;
 }
 
-.login-form__submit:hover{
+.c-login-form__submit:hover {
     background-color: #166fe5;
+    border: none;
 }
 
-.login__link{
+.c-login__link {
     display: block;
-    margin: 1rem auto;
+    margin: .75rem auto;
     width: fit-content;
 }
 
-.login__register{
+.c-login__password-reset {
+    color: #1877f2;
+    font-size: .875rem;
+}
+
+.c-login__password-reset:hover {
+    text-decoration: underline;
+}
+
+.c-login__register {
     margin-bottom: initial;
     background-color: #42b72a;
     color: #fff;
     font-size: 1.0625rem;
-    font-weight: 600;
-    padding: .8125rem 1rem;
+    font-weight: bold;
+    padding: 0 1rem;
     border-radius: .375rem;
+    line-height: 48px;
     border: none;
+    transition: background-color .25s ease-out;
 }
 
-hr{
+.c-login__register:hover {
+    background-color: #39a923;
+}
+
+.c-login__separator {
     border-top: 1px solid #dadde1;
+    margin: 1.25rem 0 1.625rem;
 }
 
-header{
+/* --------------------------------------- MAIN.PHP ----------------------------------- */
+
+header {
     height: 56px;
     display: flex;
     justify-content: space-between;
 }
 
-.search{
+.c-search {
     display: flex;
     align-items: center;
 }
 
-.search__logo{
+.c-search__logo {
     font-size: 2.5rem;
     color: #18acfd;
     display: block;
@@ -107,22 +145,22 @@ header{
     cursor: pointer;
 }
 
-.search__input{
+.c-search__input {
     position: relative;
     width: 18.25rem;
     height: 2.5rem;
     color: #606770;
 }
 
-.search__input-icon{
+.c-search__input-icon {
     position: absolute;
     top: 50%;
     left: .75rem;
     transform: translateY(-50%);
 }
 
-.search__input-field{
-    padding: .49375rem 1rem .5625rem 2.25rem;
+.c-search__input-field {
+    padding: .4375rem 1rem .5625rem 2.25rem;
     /* padding: 7px 16px 9px 36px; */
     border-radius: 2rem;
     background-color: #f0f2f5;
@@ -132,12 +170,16 @@ header{
     font-size: .9375rem;
 }
 
-.controls{
+.c-search__input-field:focus{
+    outline-color: transparent;
+}
+
+.l-controls--flex {
     display: flex;
     align-items: center;
 }
 
-.controls__account{
+.c-controls__account {
     color: #1877f2;
     font-weight: 600;
     background-color: #ECF3FF;
@@ -145,7 +187,7 @@ header{
     padding: 0 12px;
 }
 
-.controls__settings{
+.c-controls__settings {
     background-color: #e4e6eb;
     width: 2.5rem;
     height: 2.5rem;
@@ -155,11 +197,11 @@ header{
     cursor: pointer;
 }
 
-.controls__settings:hover{
+.c-controls__settings:hover {
     background-color: #e0e1e4;
 }
 
-.controls__settings i{
+.c-controls__settings i {
     font-size: 1.5rem;
     position: absolute;
     pointer-events: none;
@@ -168,7 +210,18 @@ header{
     transform: translate(-50%, -50%);
 }
 
-.controls--margin{
+.l-controls--margin {
     margin-left: .5rem;
 }
 
+.h-bio-hide{
+    display: none;
+}
+
+.c-hero__bio-show{
+    display: none;
+}
+
+.h-bio-show{
+    display: block;
+}
