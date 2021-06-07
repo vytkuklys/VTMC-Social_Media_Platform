@@ -1,24 +1,50 @@
 const bioInputField = document.querySelector('.js-bio-input');
 const bioUpdateBtn = document.querySelector('.js-bio-show');
 const bioCancelBtn = document.querySelector('.js-bio-hide');
-const bioSubmitBtn = document.querySelector('.js-bio-submit');
 const coverToggleMenuBtn = document.querySelector('.js-cover-btn');
 const navDropdownBtn = document.querySelector('.js-drop-menu');
 const navSelectBtns = document.querySelectorAll('.js-nav-btn');
 const popUpNavBtns = document.querySelectorAll('.js-popup-nav-btn');
 const popUpOpenBtn = document.querySelector('.js-popup-open-btn');
-const popUpExitBtn = document.querySelector('.js-popup-exit-btn');
+const popUpExitBtn = document.querySelectorAll('.js-popup-exit-btn');
+const postManageBtn = document.querySelectorAll('.js-post-manage-btn');
+const postCreateInputField = document.querySelector('.js-post-create-input');
 
 const handleBioInput = digitCount => {
     const bioRemainingDigits = document.querySelector('.js-digits-quota');
     const quota = 101 - digitCount;
-    if (!bioSubmitBtn.classList.contains('h-hero__bio-submit')) {
-        bioSubmitBtn.classList.add('h-hero__bio-submit');
-    }
+    enableBioSubmit();
     if (quota < 0) {
         return;
     }
     bioRemainingDigits.textContent = quota;
+}
+
+const isEmpty = digitCount =>{
+    return !digitCount;
+}
+
+const enablePostCreateSubmit = (digitCount) =>{
+    if(isEmpty(digitCount)) return;
+    
+    const postSubmitBtn = document.querySelector('.js-post-submit');
+    if (!postSubmitBtn.classList.contains('h-submit-btn')) {
+        postSubmitBtn.classList.add('h-submit-btn');
+    }
+}
+
+const enableBioSubmit = () =>{
+    const bioSubmitBtn = document.querySelector('.js-bio-submit');
+    if (!bioSubmitBtn.classList.contains('h-submit-btn')) {
+        bioSubmitBtn.classList.add('h-submit-btn');
+    }
+}
+
+const disableBioSubmit = () =>{
+    const bioSubmitBtn = document.querySelector('.js-bio-submit');
+    if (bioSubmitBtn.classList.contains('h-submit-btn')) {
+        bioSubmitBtn.classList.remove('h-submit-btn');
+    }
 }
 
 const handleShowBioUpdate = () => {
@@ -32,24 +58,30 @@ const handleShowBioUpdate = () => {
 const handleCloseBioUpdate = (e) => {
     e.preventDefault();
     const form = document.querySelector('.js-bio-form');
-    if (bioSubmitBtn.classList.contains('h-hero__bio-submit')) {
-        bioSubmitBtn.classList.remove('h-hero__bio-submit');
-    }
     bioInputField.value = '';
     form.classList.add('h-hide');
     bioUpdateBtn.classList.add('h-show');
     handleBioInput(0);
+    disableBioSubmit();
 }
 
 const handleClosePopUp = () => {
-    const popup = document.querySelector('.c-pop-up__form');
-    popup.classList.add('h-hide');
+    const popup = document.querySelectorAll('.c-pop-up__form');
+    popup.forEach(form =>{
+        form.classList.add('h-hide');
+    })
 }
 
 const handleOpenPopUp = () => {
     const popup = document.querySelector('.c-pop-up__form');
     handleAddCover();
     popup.classList.remove('h-hide');
+}
+
+const handleTogglePostManager = id => {
+    if(!id) return;
+    const popup = document.getElementById(id);
+    popup.classList.toggle('h-hide');
 }
 
 const handleDropMenu = () => {
@@ -97,17 +129,29 @@ bioInputField.addEventListener('keyup', () => {
     handleBioInput(digitCount);
 });
 
+postCreateInputField.addEventListener('keyup', () => {
+    const digitCount = postCreateInputField.value.length;
+    enablePostCreateSubmit(digitCount);   
+});
+
 bioUpdateBtn.addEventListener('click', handleShowBioUpdate);
 
 bioCancelBtn.addEventListener('click', (e) => handleCloseBioUpdate(e));
 
-
-
-popUpExitBtn.addEventListener('click', (e) => handleClosePopUp(e));
+popUpExitBtn.forEach(btn =>{
+    btn.addEventListener('click', (e) => handleClosePopUp(e));
+});
 
 popUpOpenBtn.addEventListener('click', (e) => handleOpenPopUp(e));
 
 navDropdownBtn.addEventListener('click', (e) => handleDropMenu());
+
+postManageBtn.forEach(btn =>{
+    btn.addEventListener('click', () => {
+        const id = btn.parentElement.parentElement.children[1].id;
+        handleTogglePostManager(id);
+    });
+})
 
 popUpNavBtns.forEach(btn => {
     btn.addEventListener('click', () => {

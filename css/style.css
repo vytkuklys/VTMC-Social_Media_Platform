@@ -1,4 +1,4 @@
-/* ---------------------------------- COMMON STYLINGS --------------------------------------- */
+/* ---------------------------------- GENERAL --------------------------------------- */
 
 * {
     margin: 0;
@@ -19,7 +19,7 @@ a {
 
 button {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding-bottom: .2rem;
+    /* padding-bottom: .2rem; */
 }
 
 textarea {
@@ -30,6 +30,38 @@ textarea {
 
 i {
     pointer-events: none;
+}
+
+/* ------------------ REPEATING COMPONENTS ------------------ */
+
+.c-btn {
+    border: none;
+    cursor: pointer;
+    background-color: #e4e6eb;
+    padding: 0 .75rem;
+    border-radius: .375rem;
+    margin-left: .25rem;
+    line-height: 36px;
+    font-size: 15px;
+    color: #050505;
+    font-weight: 500;
+}
+
+.c-btn:hover {
+    background-color: #d8dadf;
+}
+
+.c-btn i {
+    margin: 0 .2475rem;
+}
+
+.c-submit-btn {
+    cursor: not-allowed;
+    color: #bcc0c4;
+}
+
+.c-submit-btn:hover {
+    background-color: #e4e6eb;
 }
 
 /*------------------ INDEX.PHP --------------------*/
@@ -311,10 +343,8 @@ header {
     background-color: #e0e1e4;
 }
 
-.c-hero__cover-popup {
+.c-popup {
     position: absolute;
-    right: 1.8rem;
-    bottom: -4.65rem;
     background-color: #ffffff;
     width: 20rem;
     border-radius: .5rem;
@@ -322,7 +352,7 @@ header {
     box-shadow: 0 12px 28px 0 #e4e6eb, 0 2px 4px 0 #e0e1e4, inset 0 0 0 1px #e4e6eb;
 }
 
-.c-hero__cover-popup button {
+.c-popup button {
     display: block;
     padding: 0 .5rem;
     line-height: 36px;
@@ -334,16 +364,31 @@ header {
     width: 100%;
     background-color: transparent;
     border: none;
+    color: #050505;
     text-align: left;
 }
 
-.c-hero__cover-popup button:hover {
+hr {
+    background: #dadde1;
+    border-width: 0;
+    color: #dadde1;
+    margin: .5rem;
+    height: 1px;
+}
+
+.c-popup button:hover {
     background-color: #f2f2f2;
 }
 
-.c-hero__cover-popup button i {
+.c-popup button i {
     margin-right: .75rem;
 }
+
+.c-hero__cover-popup {
+    right: 1.8rem;
+    bottom: -4.65rem;
+}
+
 .c-hero__bio {
     width: 50%;
     min-width: 320px;
@@ -358,37 +403,13 @@ header {
     margin: 0 auto;
 }
 
-.c-hero__bio-btn {
-    border: none;
-    cursor: pointer;
-    padding: 0 .75rem;
-    line-height: 36px;
-    font-weight: 500;
-    font-size: 15px;
-    background-color: #e4e6eb;
-    border-radius: .375rem;
-}
-
-.c-hero__bio-btn:hover {
-    background-color: #e0e1e4;
-}
-
-.c-hero__bio-submit:hover {
-    background-color: #e4e6eb;
-}
-
-.c-hero__bio-submit {
-    cursor: not-allowed;
-    color: #bcc0c4;
-}
-
-.h-hero__bio-submit {
+.h-submit-btn {
     color: #ffffff;
     background-color: #18acfd;
     cursor: pointer;
 }
 
-.h-hero__bio-submit:hover {
+.h-submit-btn:hover {
     background-color: #18acfd;
     filter: brightness(95%);
 }
@@ -458,7 +479,7 @@ header {
     margin: .5rem auto .5rem;
 }
 
-.c-nav{
+.c-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -467,40 +488,44 @@ header {
     border-top: 1px solid #e5e5e5;
 }
 
-.c-nav__links{
+.c-nav__links {
     padding: .25rem 0;
 }
-.c-nav__link{
-    display: inline-block;
+
+.c-nav__link {
     padding: 0 16px;
+    line-height: 56px;
+}
+
+.c-underlined-btn {
+    display: inline-block;
     cursor: pointer;
     color: #65676b;
-    line-height: 56px;
     font-weight: 500;
     border-radius: .375rem;
     border-bottom: .2rem solid transparent;
 }
 
-.c-nav__link:hover{
+.c-underlined-btn:hover {
     background-color: #f2f2f2;
 }
 
-.c-nav__drop-btn{
+.c-nav__drop-btn {
     border: none;
     background-color: transparent;
     font-size: 15px;
 }
 
-.c-nav__drop-btn i{
+.c-nav__drop-btn i {
     margin-left: .45rem;
 }
 
-.c-nav__drop-menu{
+.c-nav__drop-menu {
     display: inline;
     position: relative;
 }
 
-.c-nav__drop-items{
+.c-nav__drop-items {
     position: absolute;
     left: 0;
     display: flex;
@@ -512,7 +537,7 @@ header {
     min-width: 328px;
 }
 
-.c-nav__drop-item{
+.c-nav__drop-item {
     color: #050505;
     font-weight: 500;
     padding: 0 .5rem;
@@ -520,50 +545,119 @@ header {
     border-radius: .25rem;
 }
 
-.c-nav__drop-item:hover{
+.c-nav__drop-item:hover {
     background-color: #f2f2f2;
 }
 
-.c-nav__control{
-    border: none;
-    cursor: pointer;
-    background-color: #e4e6eb;
-    padding: 0 .75rem;
-    border-radius: .375rem;
-    line-height: 36px;
-    font-size: 15px;
-    color: #050505;
-    font-weight: 500;
-}
-
-.c-nav__control:hover{
-    background-color: #e0e1e4;
-}
-
-.c-nav__control i{
-    margin: 0 .223rem;
-}
-
-.c-create-post{
+.c-create-post {
     max-width: 500px;
     margin: 0 auto;
     border-radius: .5rem;
     padding: .75rem 1rem .625rem;
     background-color: #ffffff;
+    box-shadow: 0 1px 2px #cdcfd1;
 }
 
-.c-create-post__wrapper{
+.c-post {
+    margin: 1rem auto;
+    max-width: 500px;
+    position: relative;
+    border-radius: .5rem;
+    padding: .75rem 1rem .5rem;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px #cdcfd1;
+}
+
+.c-post__comment-btn {
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    border-radius: 2rem;
+    background-color: #f0f2f5;
+    font-size: 15px;
+    color: #65676b;
+    padding: .5rem .75rem;
+}
+
+.c-post__comment-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin-right: .5rem;
+}
+
+.c-post__option {
+    width: 100%;
+    background-color: #ffffff;
+    margin-left: 0;
+    color: #65676b;
+    border: .25rem solid #ffffff;
+}
+
+.c-post__option:hover {
+    background-color: #f2f2f2;
+}
+
+.c-post__details {
+    width: 100%;
+}
+
+.c-post__author {
+    font-weight: 600;
+    color: #050505;
+}
+
+.c-post__datetime {
+    font-weight: 600;
+    font-size: 13px;
+    color: #65676b;
+}
+
+.c-post__more-btn {
+    border-radius: 50%;
+    width: 43.85px;
+    height: 36px;
+    padding: 0;
+    margin-left: 0;
+    background-color: transparent;
+}
+
+.c-post__more-btn:hover {
+    background-color: #f2f2f2;
+}
+
+.c-post__img {
+    width: calc(100% + 2rem);
+    height: 100%;
+    margin: .5rem 0 0 -1rem;
+}
+
+.c-post__text {
+    padding: .5rem 0 0;
+}
+
+.c-post__up {
+    right: 1.15rem;
+    top: 3.5rem;
+    max-width: 21.5rem;
+}
+
+.c-post__popup button i {
+    font-size: 20px;
+}
+
+.c-create-post__wrapper {
     display: flex;
 }
 
-.c-create-post__profile-img{
+.c-profile-img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-right: .5rem;
 }
 
-.c-create-post__open-btn{
+.c-create-post__open-btn {
     width: 100%;
     border: none;
     cursor: pointer;
@@ -574,10 +668,12 @@ header {
     text-align: left;
     padding: .5rem .75rem;
 }
-.c-create-post__open-btn:hover{
+
+.c-create-post__open-btn:hover {
     background-color: #e4e6e9;
 }
-.c-create-post__btns{
+
+.c-create-post__btns {
     display: flex;
     padding: .5rem 0 0;
     margin: .75rem 0 0;
@@ -585,7 +681,7 @@ header {
 
 }
 
-.c-create-post__btn{
+.c-create-post__btn {
     border: none;
     cursor: pointer;
     background-color: transparent;
@@ -593,37 +689,67 @@ header {
     color: #65676b;
     font-weight: 500;
     border-radius: .5rem;
-    /* width: 100%; */
     font-size: 15px;
     word-break: break-word;
     text-align: center;
 }
 
-.c-create-post__btn:last-child{
+.c-create-post__btn:last-child {
     flex-grow: 1;
 }
 
-.c-create-post__btn:hover{
+.c-create-post__btn:hover {
     background-color: #f2f2f2;
 }
 
-.c-create-post__btn i{
-    font-size: 1.45rem;
+.c-create-post__btn i {
+    font-size: 1.5rem;
     vertical-align: top;
     margin-right: .25rem;
 }
 
-.c-create-post__btn:first-child i{
+.c-create-post__btn:first-child i {
     color: #f43150;
 }
 
-.c-create-post__btn:last-child i{
+.c-create-post__btn:last-child i {
     color: #45bd62;
 }
 
-.container{
-    background-color: #f0f2f5;
+.c-filter-post {
+    max-width: 500px;
+    margin: 1rem auto 0;
+    border-radius: .5rem;
+    padding: .5rem 0 0;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px #cdcfd1;
 }
+
+.c-filter-post__title {
+    font-size: 20px;
+    color: #050505;
+}
+
+.c-filter-post__layout-btn {
+    background-color: transparent;
+    border: none;
+    border-bottom: .2rem solid #ffffff;
+    font-size: 15px;
+    padding: .426rem 0;
+    width: 100%;
+    border-top: .2rem solid #ffffff;
+    border-radius: .6rem;
+}
+
+.c-filter-post__layout-btn i {
+    margin-right: .25rem;
+}
+
+.container {
+    background-color: #f0f2f5;
+    padding: 1rem 0;
+}
+
 /* --------------- POP-UP FORMS ----------------- */
 
 .c-pop-up__form {
@@ -695,7 +821,7 @@ header {
     border-radius: initial;
 }
 
-.h-selected:hover{
+.h-selected:hover {
     background-color: #ffffff;
 }
 
@@ -714,10 +840,100 @@ header {
     background-size: cover;
 }
 
+/* ------------ POP-UP for creating posts */
+
+.c-pop-up__create-post {
+    max-width: 500px;
+}
+
+.c-pop-up__fullname {
+    color: #050505;
+    font-weight: 600;
+    line-height: 40px;
+}
+
+.c-pop-up__input-msg {
+    border: none;
+    width: calc(100% - 2rem);
+    margin: 0 1rem;
+    padding: .25rem 0 1.125rem;
+    font-size: 24px;
+}
+
+.c-pop-up__input-msg:focus {
+    outline-color: transparent;
+}
+
+.c-pop-up__subtitle {
+    font-weight: 600;
+}
+
+.c-pop-up__extras {
+    display: flex;
+    border-radius: inherit;
+    padding: .5rem 1rem;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ced0d4;
+    margin: 1rem 1rem 0;
+    border-radius: .5rem;
+    box-shadow: 0 1px 2px #cdcfd1;
+}
+
+.c-pop-up__img-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    font-size: 22px;
+    padding: 0;
+    color: #45bd62;
+}
+
+.c-pop-up__img-btn:hover {
+    background-color: #f2f2f2;
+}
+
+.c-pop-up__submit-btn{
+    width: calc(100% - 2rem);
+    margin: 1rem;
+}
+
 .h-hide {
     display: none;
 }
 
-.h-separator--shadow{
+.h-separator--shadow {
     box-shadow: 1px 1px 2px 1px #e4e6eb;
+}
+
+.l--flex {
+    display: flex;
+}
+
+.l--center-justify {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.h--border-top {
+    border-top: 1px solid #dadde1;
+}
+
+.l--padding {
+    padding: 0 .75rem;
+}
+
+.l--padding-bottom {
+    padding-bottom: .5rem;
+}
+
+.l--padding-top {
+    padding-top: .5rem;
+}
+
+.l--margin {
+    margin: 1rem;
 }
