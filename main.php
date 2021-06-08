@@ -1,6 +1,6 @@
 <?php
     session_start();
-    include_once('./includes/inc.db_config.php');
+    include_once('./includes/dbh.inc.php');
 
     if (isset($_SESSION["firstname"]) && isset($_SESSION["lastname"]) && isset($_SESSION["userId"])) {
         if (isset($_POST['logout'])) {
@@ -10,6 +10,7 @@
     } else {
         header("location:index.php");
     }
+    print_r($_SESSION);
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +24,7 @@
         content="Check out this faceboek site where you can post messages, as well as, like and comment.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://kit.fontawesome.com/85a9462cb0.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="css/style.css?rel=313">
+    <link rel="stylesheet" href="css/style.css?rel=212">
 </head>
 
 <body>
@@ -61,7 +62,10 @@
                 <button class="c-hero__cover-btn"><i class="fas fa-camera"></i>Pridėti viršelio nuotrauką</button>
                 <div class="c-hero__cover-popup c-popup h-hide">
                     <button class="js-popup-open-btn"><i class="far fa-images"></i>Pasirinkti nuotrauką</button>
-                    <button><i class="fas fa-upload"></i>Įkelti nuotrauką</button>
+                    <label for="uploadCover">
+                        <i class="fas fa-upload"></i>Įkelti nuotrauką
+                        <input type="file" class="js-cover-upload-btn" name="file" id="uploadCover" accept=".jpg, .jpeg, .png">
+                    </label>
                 </div>
             </div>
             <div aria-label="User Bio" class="c-hero__bio">
@@ -116,12 +120,12 @@
             <div class="c-create-post">
                 <div class="l--flex">
                     <img class="c-profile-img" src="./images/male.jpg" alt="User Profile Image">
-                    <button class="c-create-post__open-btn">Ką galvojate?</button>
+                    <button class="c-create-post__open-btn js-open-create-post-btn">Ką galvojate?</button>
                 </div>
                 <div class="c-create-post__btns">
-                    <button class="c-create-post__btn"><i class="fas fa-video"></i> Tiesioginė vaizdo
+                    <button class="c-create-post__btn js-open-create-post-btn"><i class="fas fa-video"></i> Tiesioginė vaizdo
                         transliacija</button>
-                    <button class="c-create-post__btn"><i class="far fa-images"></i> Photo/Video</button>
+                    <button class="c-create-post__btn js-open-create-post-btn"><i class="far fa-images"></i> Photo/Video</button>
                 </div>
             </div>
             <div class="c-filter-post">
@@ -150,7 +154,8 @@
                     $sql = "
                     SELECT pranesimai.*, vartotojai.Vardas, vartotojai.Pavarde 
                     FROM `pranesimai` LEFT JOIN vartotojai 
-                    ON vartotojai.Vartotojo_id = pranesimai.Autorius";
+                    ON vartotojai.Vartotojo_id = pranesimai.Autorius
+                    ORDER BY pranesimai.Redagavimo_data DESC";
                     $result = $connectM->prepare($sql);
                     $result->execute();
                     $number = $result->rowCount();
@@ -179,8 +184,13 @@
                                 <hr>
                                 <button><i class=\"far fa-trash-alt\"></i> Move to trash</button>
                             </div>
-                            <p class=\"c-post__text\">".$row['Tekstas']."</p>
-                            <img src=\"./uploads/".$row['Nuotrauka']."\" class=\"c-post__img\" alt=\"\">
+                            <p class=\"c-post__text\">".$row['Tekstas']."</p>";
+                        
+                        echo 
+                            empty($row['Nuotrauka']) ? "" :
+                            "<img src=\"./uploads/".$row['Nuotrauka']."\" class=\"c-post__img\" alt=\"\">";
+                        
+                        echo "
                             <div class=\"l--flex h--border-top\">
                                 <button class=\"c-btn c-post__option\"><i class=\"far fa-thumbs-up\"></i>Patinka</button>
                                 <button class=\"c-btn c-post__option\"><i class=\"far fa-comment-alt\"></i>Komentuoti</button>
@@ -226,7 +236,7 @@
                 </div>
             </div>
         </div>
-        <div class="c-pop-up__form c-pop-up__create-post">
+        <div class="c-pop-up__form c-pop-up__create-post h-hide">
             <div class="c-pop-up__header">
                 <h2 class="c-pop-up__title">Sukurti įrašą</h2>
                 <button class="c-pop-up__exit-btn js-popup-exit-btn"><i class="fas fa-times"></i></button>
@@ -235,18 +245,26 @@
                 <img class="c-profile-img" src="./images/male.jpg" alt="User Profile Image">
                 <p class="c-pop-up__fullname">Simonas Donskovas</p>
             </div>
-            <form method="POST">
-                <textarea name="postMessage" rows="4" placeholder="Ką galvojate?" class="c-pop-up__input-msg js-post-create-input"></textarea>
+            <form method="POST" action="./includes/postCreate.inc.php" enctype="multipart/form-data">
+                <textarea name="postMsg" rows="4" placeholder="Ką galvojate?" class="c-pop-up__input-msg js-post-create-input"></textarea>
+                <div class="c-pop-up__file-info js-file-info h-hide">
+                    <p class="c-pop-up__filename">filename.jpg</p>
+                    <button class="c-pop-up__exit-btn c-pop-up__cancel-btn js-post-cancel-img-btn"><i class="fas fa-times"></i></button>
+                </div>
                 <div class="c-pop-up__extras">
                     <p class="c-pop-up__subtitle">Pridėkite prie savo įrašo</p>
-                    <button class="c-pop-up__img-btn"><i class="far fa-images"></i></button>
+                    <!-- <button class="c-pop-up__img-btn"><i class="far fa-images"></i></button> -->
+                    <label for="postImg" class="c-pop-up__img-btn">
+                        <input type="file" id="postImg" class="js-post-img-btn" name="file" accept=".jpg, .jpeg, .png">
+                        <i class="far fa-images"></i>
+                    </label>
                 </div>
-                <button name="createPost" class="c-submit-btn c-btn c-pop-up__submit-btn js-post-submit"
+                <button name="submit" value="submit" class="c-submit-btn c-btn c-pop-up__submit-btn js-post-submit"
                                     aria-label="Submit Form">Sukurti įrašą</button>
             </form>
         </div>
     </main>
-    <script src="./js/main.js?rel=146" async defer></script>
+    <script src="./js/main.js?rel=141" async defer></script>
 </body>
 
 </html>

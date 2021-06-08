@@ -2,6 +2,7 @@ const bioInputField = document.querySelector('.js-bio-input');
 const bioUpdateBtn = document.querySelector('.js-bio-show');
 const bioCancelBtn = document.querySelector('.js-bio-hide');
 const coverToggleMenuBtn = document.querySelector('.js-cover-btn');
+const coverUploadPhotoBtn = document.querySelector('.js-cover-upload-btn');
 const navDropdownBtn = document.querySelector('.js-drop-menu');
 const navSelectBtns = document.querySelectorAll('.js-nav-btn');
 const popUpNavBtns = document.querySelectorAll('.js-popup-nav-btn');
@@ -9,6 +10,40 @@ const popUpOpenBtn = document.querySelector('.js-popup-open-btn');
 const popUpExitBtn = document.querySelectorAll('.js-popup-exit-btn');
 const postManageBtn = document.querySelectorAll('.js-post-manage-btn');
 const postCreateInputField = document.querySelector('.js-post-create-input');
+const postImageBtn = document.querySelector('.js-post-img-btn');
+const postCreateBtn = document.querySelectorAll('.js-open-create-post-btn');
+const postCancelImgBtn = document.querySelector('.js-post-cancel-img-btn');
+
+const uploadCoverPhoto = () => {
+    const file = coverUploadPhotoBtn.files;
+    if(file){
+        const fileReader = new FileReader();
+
+        fileReader.onload = function (event){
+            coverToggleMenuBtn.style.backgroundImage = `url(${event.target.result})`;
+        }
+        fileReader.readAsDataURL(file[0]);
+    }
+    console.log(coverUploadPhotoBtn.files);
+    let files = coverUploadPhotoBtn.files[0];
+    // file = file[0];
+    console.log("Uploading file...");
+    const API_ENDPOINT = "./includes/coverUpdate.inc.php";
+    const request = new XMLHttpRequest();
+    const formData = new FormData();
+  
+    request.open("POST", API_ENDPOINT, true);
+    request.onreadystatechange = () => {
+      if (request.readyState === 4 && request.status === 200) {
+        console.log('Great Success')
+      }
+    };
+    formData.append("file", files);
+    formData.append('submit', true);
+    request.send(formData);  
+
+
+}
 
 const handleBioInput = digitCount => {
     const bioRemainingDigits = document.querySelector('.js-digits-quota');
@@ -31,6 +66,15 @@ const enablePostCreateSubmit = (digitCount) =>{
     if (!postSubmitBtn.classList.contains('h-submit-btn')) {
         postSubmitBtn.classList.add('h-submit-btn');
     }
+}
+
+const showFileName = event => {
+    const input = event.srcElement;
+    const fileName = input.files[0].name;
+    const imageInfo = document.querySelector('.js-file-info');
+    if(fileName) enablePostCreateSubmit(1);
+    imageInfo.children[0].textContent = fileName;
+    imageInfo.classList.remove('h-hide');
 }
 
 const enableBioSubmit = () =>{
@@ -70,6 +114,11 @@ const handleClosePopUp = () => {
     popup.forEach(form =>{
         form.classList.add('h-hide');
     })
+}
+
+const handleOpenCreatePostPopup = () =>{
+    const popup = document.querySelector('.c-pop-up__create-post');
+    popup.classList.remove('h-hide');
 }
 
 const handleOpenPopUp = () => {
@@ -124,6 +173,14 @@ const handleSelectNavBtn = id => {
     btn.classList.add('h-selected');
 }
 
+const handleCancelImagePost = e =>{
+    e.preventDefault();
+    const image =  document.getElementById('postImg');
+    const imageInfo = document.querySelector('.js-file-info');
+    image.value = null;
+    imageInfo.classList.add('h-hide');
+}
+
 bioInputField.addEventListener('keyup', () => {
     const digitCount = bioInputField.value.length;
     handleBioInput(digitCount);
@@ -163,6 +220,16 @@ navSelectBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         handleSelectNavBtn(btn.id);
     });
+});
+
+postImageBtn.addEventListener('change', showFileName );
+
+coverUploadPhotoBtn.addEventListener('change', uploadCoverPhoto);
+
+postCancelImgBtn.addEventListener('click', (e)=> handleCancelImagePost(e));
+
+postCreateBtn.forEach(btn =>{
+    btn.addEventListener('click', handleOpenCreatePostPopup)
 });
 
 coverToggleMenuBtn.addEventListener('click', (e) => {

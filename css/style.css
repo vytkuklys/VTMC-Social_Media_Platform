@@ -19,7 +19,12 @@ a {
 
 button {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* padding-bottom: .2rem; */
+}
+
+input[type="file"] { 
+    z-index: -1;
+    position: absolute;
+    opacity: 0;
 }
 
 textarea {
@@ -62,6 +67,24 @@ i {
 
 .c-submit-btn:hover {
     background-color: #e4e6eb;
+}
+
+.c-pop-up__exit-btn {
+    position: absolute;
+    right: 1.0667rem;
+    top: 50%;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    border: none;
+    font-size: 1.25rem;
+    transform: translateY(-50%);
+    background-color: #e4e6eb;
+    cursor: pointer;
+}
+
+.c-pop-up__exit-btn:hover {
+    background-color: #d8dadf;
 }
 
 /*------------------ INDEX.PHP --------------------*/
@@ -347,12 +370,14 @@ header {
     position: absolute;
     background-color: #ffffff;
     width: 20rem;
+    right: 1.25rem;
     border-radius: .5rem;
     padding: .5rem;
     box-shadow: 0 12px 28px 0 #e4e6eb, 0 2px 4px 0 #e0e1e4, inset 0 0 0 1px #e4e6eb;
 }
 
-.c-popup button {
+.c-popup button,
+.c-popup label {
     display: block;
     padding: 0 .5rem;
     line-height: 36px;
@@ -376,11 +401,13 @@ hr {
     height: 1px;
 }
 
-.c-popup button:hover {
+.c-popup button:hover,
+.c-popup label:hover {
     background-color: #f2f2f2;
 }
 
-.c-popup button i {
+.c-popup button i, 
+.c-popup label i {
     margin-right: .75rem;
 }
 
@@ -629,11 +656,11 @@ hr {
 .c-post__img {
     width: calc(100% + 2rem);
     height: 100%;
-    margin: .5rem 0 0 -1rem;
+    margin: 0 0 -.28rem -1rem;
 }
 
 .c-post__text {
-    padding: .5rem 0 0;
+    padding: .5rem 0;
 }
 
 .c-post__up {
@@ -774,24 +801,6 @@ hr {
     border-bottom: 1px solid #e5e5e5;
 }
 
-.c-pop-up__exit-btn {
-    position: absolute;
-    right: 1.0667rem;
-    top: 50%;
-    height: 36px;
-    width: 36px;
-    border-radius: 50%;
-    border: none;
-    font-size: 1.25rem;
-    transform: translateY(-50%);
-    background-color: #e4e6eb;
-    cursor: pointer;
-}
-
-.c-pop-up__exit-btn:hover {
-    background-color: #d8dadf;
-}
-
 .c-pop-up__title {
     font-size: 1.25rem;
     line-height: 60px;
@@ -896,9 +905,37 @@ hr {
     background-color: #f2f2f2;
 }
 
+.c-pop-up__img-btn i{
+    margin-top: .6rem;
+}
+
 .c-pop-up__submit-btn{
     width: calc(100% - 2rem);
     margin: 1rem;
+}
+
+.c-pop-up__file-info{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 1rem;
+}
+
+.c-pop-up__filename{
+    display: inline-block;
+    text-align: left;
+    /* line-height: 28px; */
+    font-weight: bold;
+    margin-right: .5rem;
+}
+
+.c-pop-up__cancel-btn{
+    position: relative;
+    transform: initial;
+    right: initial;
+    top: initial;
+    width: 28px;
+    height: 28px;
 }
 
 .h-hide {
