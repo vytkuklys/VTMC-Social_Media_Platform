@@ -14,7 +14,8 @@ const postInputField = document.querySelector('.js-post-input');
 const postImageBtn = document.querySelector('.js-post-img-btn');
 const postCreateBtn = document.querySelectorAll('.js-open-create-post-btn');
 const postCancelImgBtn = document.querySelector('.js-post-cancel-img-btn');
-const postUpdateBtn = document.querySelectorAll('.js-post-update-btn')
+const postUpdateBtn = document.querySelectorAll('.js-post-update-btn');
+const postDeleteBtn = document.querySelectorAll('.js-post-delete-btn');
 
 const uploadCoverPhoto = () => {
     const file = coverUploadPhotoBtn.files;
@@ -234,6 +235,16 @@ const handleOpenUpdatePostPopup = (text, img, id) => {
     togglePostManager(id);
 }
 
+const handleOpenDeletePostPopup = id =>{
+    const submitBtn = document.querySelector('.js-delete-submit-btn');
+    const form = document.querySelector('.js-delete-form');
+
+    form.classList.remove('h-hide');
+    submitBtn.setAttribute('value', id);
+
+    togglePostManager(id);
+}
+
 const handleOpenPopUp = () => {
     const popup = document.querySelector('.c-pop-up__form');
     handleAddCover();
@@ -353,6 +364,14 @@ postUpdateBtn.forEach(btn => {
         const id = btn.parentElement.id;
         const img = btn.parentElement.parentElement.children[3].getAttribute('src');
         handleOpenUpdatePostPopup(message, img, id);
+    });
+});
+
+postDeleteBtn.forEach(btn => {
+    btn.addEventListener('click', ()=>{
+        const id = btn.parentElement.id;
+        handleOpenDeletePostPopup(id);
+        console.log('what')
     });
 });
 

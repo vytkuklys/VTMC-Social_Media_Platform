@@ -18,9 +18,6 @@
         $statement->execute();
         $statement->setFetchMode(2);
         $result = $statement->fetchAll();
-        // if(isset($result[0]['Virselio_nuotrauka'])){
-        //     $_SESSION["coverPhoto"] = $result[0]['Virselio_nuotrauka'];
-        // }
         // if(isset($result[0]['Nuotrauka'])){
         //     $_SESSION["profilePhoto"] = $result[0]['Nuotrauka'];
         // }
@@ -204,7 +201,7 @@
                                 <button class=\"js-post-update-btn\"><i class=\"fas fa-pen\"></i>Redaguoti įrašą</button>
                                 <button><i class=\"far fa-calendar-alt\"></i> Edit date</button>
                                 <hr>
-                                <button><i class=\"far fa-trash-alt\"></i> Move to trash</button>
+                                <button class=\"js-post-delete-btn\"><i class=\"far fa-trash-alt\"></i> Move to trash</button>
                             </div>
                             <p class=\"c-post__text\">".$row['Tekstas']."</p>";
                         
@@ -286,7 +283,7 @@
                                     aria-label="Submit Form">Sukurti įrašą</button>
             </form>
         </div>
-        <div class="c-pop-up__form">
+        <div class="c-pop-up__form js-delete-form h-hide">
             <div class="c-pop-up__header c-pop-up__delete-header">
                 <h2 class="c-pop-up__title">Move to Your Trash?</h2>
                 <button class="c-pop-up__exit-btn js-popup-exit-btn"><i class="fas fa-times"></i></button>
@@ -294,11 +291,11 @@
             <p class="c-pop-up__delete-info">Items in your trash will be deleted immediately. They cannot be restored. Do you still want to delete the selected item?</p>
             <form method="POST" action="./includes/postDelete.php" class="c-pop-up__delete-form">
                 <button class="c-btn c-pop-up__delete-cancel-btn js-popup-exit-btn">Atšaukti</button>
-                <button class="c-btn c-pop-up__delete-btn">Delete</button>
+                <button name="submit" class="c-btn c-pop-up__delete-btn js-delete-submit-btn">Delete</button>
             </form>
         </div>
     </main>
-    <script src="./js/main.js?rel=141" async defer></script>
+    <script src="./js/main.js?rel=144" async defer></script>
 </body>
 
 </html>
