@@ -10,7 +10,7 @@
 
         public function createPost($msg, $datetime, $userId, $photo)
         {
-            if (empty($msg) || empty($photo)) {
+            if (empty($msg) && empty($photo)) {
                 $_SESSION['message'] = "Post is required to contain message or image";
                 return;
             }
@@ -33,7 +33,7 @@
 
         public function updatePost($msg, $datetime, $photo, $id)
         {
-            if (empty($msg) || empty($photo)) {
+            if (empty($msg) && empty($photo)) {
                 $_SESSION['message'] = "Post is required to contain message or image";
                 return;
             }
@@ -43,17 +43,41 @@
             // $pdo = new PDO($dsn, $this->user, $this->pass);
             // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             try {
-                $sql = "UPDATE `pranesimai` SET `Tekstas`=?, `Redagavimo_data`=?, `Nuotrauka`=? WHERE Pranesimo_id =?";
-
-                $statement = $this->connect()->prepare($sql);
-                $statement->execute([$msg, $datetime, $photo, $id]);  
+                if($this->isPhotoUpdated($photo))
+                {
+                    $sql = "UPDATE `pranesimai` SET `Tekstas`=?, `Redagavimo_data`=?, `Nuotrauka`=? WHERE Pranesimo_id =?";
+    
+                    $statement = $this->connect()->prepare($sql);
+                    $statement->execute([$msg, $datetime, $photo, $id]);
+                }else{
+                    $sql = "UPDATE `pranesimai` SET `Tekstas`=?, `Redagavimo_data`=? WHERE Pranesimo_id =?";
+    
+                    $statement = $this->connect()->prepare($sql);
+                    $statement->execute([$msg, $datetime, $id]);
+                }
 
             } catch (Exception $e) {
                 $_SESSION['message'] =  "Database connection lost.";
             }
         }
 
-        public function getUniqueId()
+        public function deletePost($id)
+        {
+            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
+            // $pdo = new PDO($dsn, $this->user, $this->pass);
+            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            try {
+                    $sql = "DELETE FROM `pranesimai` WHERE Pranesimo_id =?";
+    
+                    $statement = $this->connect()->prepare($sql);
+                    $statement->execute([$id]);
+
+            } catch (Exception $e) {
+                $_SESSION['message'] =  "Database connection lost.";
+            }
+        }
+
+        private function getUniqueId()
         {
             $id = rand(100000000, 999999999);
             if ($this->checkIfIdExists($id)) {
@@ -62,7 +86,7 @@
             return $id;
         }
 
-        public function checkIfIdExists($id)
+        private function checkIfIdExists($id)
         {
             $sql = "SELECT * FROM pranesimai WHERE Pranesimo_id = ?";
             $statement = $this->connect()->prepare($sql);
@@ -73,5 +97,9 @@
             } else {
                 return false;
             }
+        }
+
+        private function isPhotoUpdated($photo){
+            return $photo == 0 ? false : true;
         }
     }

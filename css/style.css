@@ -77,7 +77,7 @@ i {
     width: 36px;
     border-radius: 50%;
     border: none;
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     transform: translateY(-50%);
     background-color: #e4e6eb;
     cursor: pointer;
@@ -85,6 +85,10 @@ i {
 
 .c-pop-up__exit-btn:hover {
     background-color: #d8dadf;
+}
+
+.c-pop-up__exit-btn i{
+    margin-bottom: .3rem;
 }
 
 /*------------------ INDEX.PHP --------------------*/
@@ -251,7 +255,18 @@ header {
     font-weight: 600;
     background-color: #ECF3FF;
     border-radius: 2rem;
-    padding: 0 12px;
+    padding: 0 .75rem 0 .25rem;
+    display: flex;
+    align-items: center;
+    line-height: 36px;
+}
+
+.c-controls__img{
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: .5rem;
 }
 
 .c-controls__settings {
@@ -339,7 +354,7 @@ header {
     left: 50%;
     transform: translateX(-50%);
     background: url('../images/male.jpg') center center no-repeat;
-    background-size: contain;
+    background-size: cover;
     cursor: pointer;
 }
 
@@ -360,6 +375,8 @@ header {
     touch-action: manipulation;
     cursor: pointer;
     filter: brightness(100%);
+    text-align: center;
+    line-height: 36px;
 }
 
 .c-hero__profile-btn:hover {
@@ -866,7 +883,7 @@ hr {
     width: calc(100% - 2rem);
     margin: 0 1rem;
     padding: .25rem 0 1.125rem;
-    font-size: 24px;
+    font-size: 15px;
 }
 
 .c-pop-up__input-msg:focus {
@@ -919,27 +936,56 @@ hr {
     justify-content: center;
     align-items: center;
     margin: 0 1rem;
+    position: relative;
+    border-radius: .375rem;
 }
 
 .c-pop-up__filename{
     display: inline-block;
     text-align: left;
-    /* line-height: 28px; */
     font-weight: bold;
     margin-right: .5rem;
 }
 
 .c-pop-up__cancel-btn{
-    position: relative;
-    transform: initial;
-    right: initial;
-    top: initial;
+    right: 1.25rem;
+    top: 2rem;
+    background-color: #ffffff;
     width: 28px;
     height: 28px;
 }
+.c-pop-up__delete-header{
+    text-align: justify;
+    padding-left: 1rem;
+}
+.c-pop-up__delete-info{
+    text-align: left;
+    padding: .55rem 1rem;
+    color: #050505;
+}
 
-.h-hide {
-    display: none;
+.c-pop-up__delete-form{
+    text-align: right;
+    padding: .75rem 1rem 1rem;
+}
+
+.c-pop-up__delete-cancel-btn{
+    background-color: #ffffff1A;
+    color: #1877f2;
+}
+
+.c-pop-up__delete-cancel-btn:hover{
+    background-color: #f2f2f2;
+}
+
+.c-pop-up__delete-btn{
+    background-color: #2d88ff;
+    color: white;
+    margin-left: .5rem;
+}
+
+.c-pop-up__delete-btn:hover{
+    background-color: #4294ff;
 }
 
 .h-separator--shadow {
@@ -973,4 +1019,66 @@ hr {
 
 .l--margin {
     margin: 1rem;
+}
+
+.c-validation{
+    background-color: rgba(0, 0, 0);
+    position: absolute;
+    top: 3.5rem;
+    width: 100%;
+    z-index: 20;
+    display: flex;
+    justify-content: flex-end;
+    padding: .75rem 1rem;
+}
+.c-validation__warning{
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    color: #ffffff;
+    font-weight: 600;
+    padding-left: 2rem;
+}
+
+.c-validation__warning::before{
+    font-family: 'FontAwesome';
+    color: #ffffff;
+    position: fixed;
+    font-size: 1.25rem;
+    top: 50%;
+    left: 0;
+    transform: translate(0, -50%);
+    content: '\f7a2';
+
+}
+
+.c-validation__cancel-btn{
+    background-color: #ffffff1A;
+    color: white;
+    padding: 0 3.375rem;
+}
+
+.c-validation__cancel-btn:hover{
+    background-color: #313131;
+}
+
+.c-validation__save-btn{
+    background-color: #2d88ff;
+    color: white;
+    margin-left: .5rem;
+    padding: 0 2.5rem;
+}
+
+.c-validation__save-btn:hover{
+    background-color: #4294ff;
+}
+
+.h-hide {
+    display: none;
+}
+
+.h--border-radius{
+    border-radius: .5rem;
 }

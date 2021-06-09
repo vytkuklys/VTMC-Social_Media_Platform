@@ -8,5 +8,5 @@
         $userId = $_SESSION['userId'];
         
         $user = new User();
-        $user->updateCoverImg($photo, $userId);
+        $user->updateProfileImg($photo, $userId);
     }

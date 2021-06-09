@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once('./includes/inc.db_config.php');
+include_once('./includes/dbh.inc.php');
 
 try {
      $connect = new PDO("mysql:host=$host; dbname=$dbName", $user, $pass);
