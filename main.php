@@ -35,12 +35,34 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Gezichtboek</title>
+    <title>Faceboek</title>
     <meta name="description"
         content="Check out this faceboek site where you can post messages, as well as, like and comment.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://kit.fontawesome.com/85a9462cb0.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="css/style.css?rel=552">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        // $(document).ready(function(){
+        //     var commentCount = 2;
+        //     // $("button").click(function(event){
+        //     //     console.log(event.target.parentElement.children[1].id);
+        //     //     var id = event.target.parentElement.children[1].id
+        //     //     commentCount +=1;
+        //     //     $(`[data-id=${id}]`).load("./includes/commentLoad.inc.php",{
+        //     //         commentCount: commentCount
+        //     //     });
+        //     // });
+        //     function loadComments(event){
+        //         console.log(event.target.parentElement.children[1].id);
+        //         var id = event.target.parentElement.children[1].id
+        //         commentCount +=1;
+        //         $(`[data-id=${id}]`).load("./includes/commentLoad.inc.php",{
+        //             commentCount: commentCount
+        //         });
+        //     }
+        // })
+    </script>
+    <link rel="stylesheet" href="css/style.css?rel=421">
 </head>
 
 <body>
@@ -69,6 +91,8 @@
             </button>
         </div>
     </header>
+    <ul id="1234"></ul>
+
     <main>
         <div class="c-hero">
             <div class="c-hero__cover-img js-cover-btn" style="<?php echo isset($result[0]['Virselio_nuotrauka']) ? "background-image: url('./uploads/".$result[0]['Virselio_nuotrauka']."');" : "";?>" data-bg="<?php echo isset($result[0]['Virselio_nuotrauka']) ? "".$result[0]['Virselio_nuotrauka']."" : "0";?>">
@@ -128,7 +152,7 @@
                 </div>
             </div>
             <div class="c-nav__controls">
-                <button class="c-btn"><i class="fas fa-pen"></i> Redaguoti profilį</button>
+                <button class="c-btn" onclick="test()"><i class="fas fa-pen"></i> Redaguoti profilį</button>
                 <button class="c-btn"><i class="fas fa-eye"></i></button>
                 <button class="c-btn"><i class="fas fa-search"></i></button>
                 <button class="c-btn"><i class="fas fa-ellipsis-h"></i></button>
@@ -171,21 +195,33 @@
                     $connectM = new PDO("mysql:host=$host; dbname=$dbName", $user, $pass);
                     $connectM->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     $sql = "
-                    SELECT pranesimai.*, vartotojai.Vardas, vartotojai.Pavarde 
-                    FROM `pranesimai` LEFT JOIN vartotojai 
-                    ON vartotojai.Vartotojo_id = pranesimai.Autorius
-                    ORDER BY pranesimai.Redagavimo_data DESC";
+                    SELECT pranesimai.*, 
+                    vartotojai.Vardas, vartotojai.Pavarde, 
+                    COUNT(komentarai.Pranesimas) as Total_comments
+                        FROM `pranesimai` 
+                        LEFT JOIN komentarai 
+                        ON komentarai.Pranesimas = pranesimai.Pranesimo_id
+                        RIGHT JOIN vartotojai
+                        ON vartotojai.Vartotojo_id = pranesimai.Autorius
+                        GROUP BY pranesimai.Pranesimo_id
+                        ORDER BY pranesimai.Redagavimo_data DESC";
                     $result = $connectM->prepare($sql);
                     $result->execute();
-                    $number = $result->rowCount();
-                    $i = 1;                                   
+                    $hideCss = "h-hide";
+                    $showCss = "";                            
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         $datetime = explode(' ', $row['Redagavimo_data']);
+                        if($row['Total_comments'] > 0){
+                            $hideCss = "";
+                            $showCss = "h-hide";
+                        }else{
+                            $hideCss = "h-hide";
+                            $showCss = "";
+                        }
                         $date = $datetime[0];
                         $time = end($datetime);
                         echo 
-                        "
-                        <div class=\"c-post\">
+                        "<div class=\"c-post\">
                             <div class=\"l--flex l--center-justify\">
                                 <img class=\"c-profile-img\" src=\"./images/male.jpg\" alt=\"User Profile Image\">
                                 <div class=\"c-post__details\">
@@ -208,17 +244,23 @@
                         echo 
                             empty($row['Nuotrauka']) ? "" :
                             "<img src=\"./uploads/".$row['Nuotrauka']."\" class=\"c-post__img\" alt=\"\">";
-                        
-                        echo "
-                            <div class=\"l--flex h--border-top\">
+                        echo
+                            "<button class=\"c-comment__toggler js-comment-toggler ".$hideCss."\">".$row['Total_comments']." komentarai</button>
+                            <div class=\"l--flex h--border-top h--border-bottom\">
                                 <button class=\"c-btn c-post__option\"><i class=\"far fa-thumbs-up\"></i>Patinka</button>
                                 <button class=\"c-btn c-post__option\"><i class=\"far fa-comment-alt\"></i>Komentuoti</button>
                                 <button class=\"c-btn c-post__option\"><i class=\"fas fa-share\"></i>Bendrinti</button>
                             </div>
-                            <div class=\"h--border-top l--flex l--padding-top\">
-                                <img class=\"c-post__comment-img\" src=\"./images/male.jpg\" alt=\"User Profile Image\">
-                                <input type=\"text\" name=\"comment\" class=\"c-post__comment-btn\"
-                                    placeholder=\"Parašykite komentarą...\">
+                            <div class=\"c-comment l--padding-top ".$showCss."\">
+                                <ul class=\"c-comment__items\" data-id=\"".$row['Pranesimo_id']."\"></ul>
+                                <div class=\" l--flex l--padding-bottom\">
+                                    <img class=\"c-post__comment-img\" src=\"./images/male.jpg\" alt=\"User Profile Image\">
+                                    <form class=\"c-comment__form\" method=\"POST\" action=\"./includes/commentCreate.inc.php\">
+                                        <input type=\"text\" name=\"comment\" class=\"c-post__comment-btn js-comment-input\"
+                                        placeholder=\"Parašykite komentarą...\">
+                                        <button class=\"c-comment__submit-btn\" name=\"submit\" value=\"".$row['Pranesimo_id']."\"><i class=\"fas fa-plus-circle\"></i></button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                         ";    
@@ -295,7 +337,7 @@
             </form>
         </div>
     </main>
-    <script src="./js/main.js?rel=144" async defer></script>
+    <script src="./js/main.js?rel=254" async defer></script>
 </body>
 
 </html>

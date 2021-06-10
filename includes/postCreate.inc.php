@@ -7,7 +7,6 @@
         $photo = 0;
         $userId = $_SESSION["userId"];
         $msg = $_POST['postMsg'];
-        print_r($_FILES);
         if(!empty($_FILES['file']['name'])){
             $newImg = new Image();
             $photo = $newImg->uploadImg($_FILES);

@@ -9,13 +9,15 @@ const navSelectBtns = document.querySelectorAll('.js-nav-btn');
 const popUpNavBtns = document.querySelectorAll('.js-popup-nav-btn');
 const popUpOpenBtn = document.querySelector('.js-popup-open-btn');
 const popUpExitBtn = document.querySelectorAll('.js-popup-exit-btn');
-const postManageBtn = document.querySelectorAll('.js-post-manage-btn');
 const postInputField = document.querySelector('.js-post-input');
+const postManageBtn = document.querySelectorAll('.js-post-manage-btn');
 const postImageBtn = document.querySelector('.js-post-img-btn');
 const postCreateBtn = document.querySelectorAll('.js-open-create-post-btn');
 const postCancelImgBtn = document.querySelector('.js-post-cancel-img-btn');
 const postUpdateBtn = document.querySelectorAll('.js-post-update-btn');
 const postDeleteBtn = document.querySelectorAll('.js-post-delete-btn');
+const commentToggleBtn = document.querySelectorAll('.js-comment-toggler');
+const commentInputFieldBtn = document.querySelectorAll('.js-comment-input');
 
 const uploadCoverPhoto = () => {
     const file = coverUploadPhotoBtn.files;
@@ -33,10 +35,7 @@ const uploadCoverPhoto = () => {
 
 const uploadProfilePhoto = () => {
     const file = profileUploadPhotoBtn.files;
-    console.log(file);
-    console.log('yo');
     if (file) {
-        console.log('yo');
         const fileReader = new FileReader();
         const profile = document.querySelector('.js-profle-img');
         fileReader.onload = function (event) {
@@ -140,14 +139,25 @@ const handleBioInput = digitCount => {
     bioRemainingDigits.textContent = quota;
 }
 
+const handleCommentInput = (event) =>{
+    const submitBtn = event.target.nextElementSibling;
+    const value = event.target.value.length;
+    submitBtn.classList.add('h-comment-submit-btn');
+    if(value == 0){
+        submitBtn.classList.remove('h-comment-submit-btn');
+    }
+}
+
 const isEmpty = digitCount => {
     return !digitCount;
 }
 
 const enablePostCreateSubmit = (digitCount) => {
-    if (isEmpty(digitCount)) return;
-
     const postSubmitBtn = document.querySelector('.js-post-submit');
+    if (isEmpty(digitCount)){
+        postSubmitBtn.classList.remove('h-submit-btn')   
+        return;
+    }
     if (!postSubmitBtn.classList.contains('h-submit-btn')) {
         postSubmitBtn.classList.add('h-submit-btn');
     }
@@ -245,6 +255,28 @@ const handleOpenDeletePostPopup = id =>{
     togglePostManager(id);
 }
 
+const handleCommentsMenuToggle = id =>{
+    const menu = document.querySelector(`[data-id="${id}"]`).parentElement;
+    if(menu.classList.contains('h-hide')){
+        loadComments(event);
+    }
+    menu.classList.toggle('h-hide');
+}
+
+function loadComments(event){
+    var id = event.target.parentElement.children[1].id
+    $(`[data-id=${id}]`).load("./includes/commentLoad.inc.php",{
+        postId: id
+    }, function(responseText, textStatus, XMLHttpRequest) {
+        if (textStatus == "success") {
+            addEvents();
+        }
+       if (textStatus == "error") {
+            console.log('no');
+       }
+    });
+}
+
 const handleOpenPopUp = () => {
     const popup = document.querySelector('.c-pop-up__form');
     handleAddCover();
@@ -252,6 +284,12 @@ const handleOpenPopUp = () => {
 }
 
 const togglePostManager = id => {
+    if (!id) return;
+    const popup = document.getElementById(id);
+    popup.classList.toggle('h-hide');
+}
+
+const toggleCommentManager = id => {
     if (!id) return;
     const popup = document.getElementById(id);
     popup.classList.toggle('h-hide');
@@ -312,7 +350,14 @@ bioInputField.addEventListener('keyup', () => {
 
 postInputField.addEventListener('keyup', () => {
     const digitCount = postInputField.value.length;
+    console.log(digitCount);
     enablePostCreateSubmit(digitCount);
+});
+
+commentInputFieldBtn.forEach(field =>{
+    field.addEventListener('keyup', (event) => {
+        handleCommentInput(event);
+    });
 });
 
 bioUpdateBtn.addEventListener('click', handleShowBioUpdate);
@@ -332,7 +377,18 @@ postManageBtn.forEach(btn => {
         const id = btn.parentElement.parentElement.children[1].id;
         togglePostManager(id);
     });
-})
+});
+
+const addEvents = ()=> {
+    const commentManageBtn = document.querySelectorAll('.js-comment-menu-btn');
+    commentManageBtn.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.nextElementSibling.id;
+            console.log(id);
+            toggleCommentManager(id);
+        });
+    });
+}
 
 popUpNavBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -371,7 +427,13 @@ postDeleteBtn.forEach(btn => {
     btn.addEventListener('click', ()=>{
         const id = btn.parentElement.id;
         handleOpenDeletePostPopup(id);
-        console.log('what')
+    });
+});
+
+commentToggleBtn.forEach(btn => {
+    btn.addEventListener('click', ()=>{
+        const id = btn.parentElement.children[1].id;
+        handleCommentsMenuToggle(id);
     });
 });
 

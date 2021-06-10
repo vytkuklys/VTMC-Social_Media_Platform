@@ -21,7 +21,12 @@ button {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-input[type="file"] { 
+input:focus,
+button:focus{
+    outline-color: transparent;
+}
+
+input[type="file"] {
     z-index: -1;
     position: absolute;
     opacity: 0;
@@ -35,6 +40,10 @@ textarea {
 
 i {
     pointer-events: none;
+}
+
+li {
+    list-style-type: none;
 }
 
 /* ------------------ REPEATING COMPONENTS ------------------ */
@@ -87,7 +96,7 @@ i {
     background-color: #d8dadf;
 }
 
-.c-pop-up__exit-btn i{
+.c-pop-up__exit-btn i {
     margin-bottom: .3rem;
 }
 
@@ -261,7 +270,7 @@ header {
     line-height: 36px;
 }
 
-.c-controls__img{
+.c-controls__img {
     width: 28px;
     height: 28px;
     border-radius: 50%;
@@ -423,7 +432,7 @@ hr {
     background-color: #f2f2f2;
 }
 
-.c-popup button i, 
+.c-popup button i,
 .c-popup label i {
     margin-right: .75rem;
 }
@@ -445,17 +454,6 @@ hr {
     align-items: center;
     max-width: 299px;
     margin: 0 auto;
-}
-
-.h-submit-btn {
-    color: #ffffff;
-    background-color: #18acfd;
-    cursor: pointer;
-}
-
-.h-submit-btn:hover {
-    background-color: #18acfd;
-    filter: brightness(95%);
 }
 
 .c-hero__bio-status {
@@ -607,7 +605,7 @@ hr {
     max-width: 500px;
     position: relative;
     border-radius: .5rem;
-    padding: .75rem 1rem .5rem;
+    padding: .75rem 1rem 0;
     background-color: #ffffff;
     box-shadow: 0 1px 2px #cdcfd1;
 }
@@ -620,7 +618,7 @@ hr {
     background-color: #f0f2f5;
     font-size: 15px;
     color: #65676b;
-    padding: .5rem .75rem;
+    padding: .5rem 1.5rem .5rem .75rem;
 }
 
 .c-post__comment-img {
@@ -688,6 +686,111 @@ hr {
 
 .c-post__popup button i {
     font-size: 20px;
+}
+
+.c-comment__wrapper{
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    width: fit-content;
+}
+
+.c-comment__more-btn{
+    width: 36px;
+    margin-left: .25rem;
+}
+
+.c-comment__toggler {
+    padding: .675rem 0;
+    background-color: transparent;
+    border: none;
+    color: #65676b;
+    font-size: 15px;
+    display: block;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.c-comment__toggler:hover {
+    text-decoration: underline;
+}
+
+.c-comment__img {
+    float: left;
+}
+
+.c-comment__details {
+    color: #050505;
+    padding: .5rem .75rem;
+    background-color: #f0f2f5;
+    border-radius: 1.125rem;
+    width: fit-content;
+}
+
+.c-comment__author {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2308;
+    white-space: nowrap;
+
+}
+
+.c-comment__message {
+    line-height: 1.3333;
+}
+
+.c-comment__like-btn {
+    padding: .1875rem 0 .25rem;
+    background-color: transparent;
+    border: none;
+    color: #65676b;
+    font-weight: bold;
+    font-size: 12px;
+    display: block;
+    cursor: pointer;
+    margin-left: 3.5rem;
+}
+
+.c-comment__like-btn:hover {
+    text-decoration: underline;
+}
+
+.c-comment__form{
+    position: relative;
+    width: 100%;
+    height: fit-content;
+}
+
+.c-comment__submit-btn{
+    background-color: transparent;
+    border: none;
+    color: #70757f;
+    cursor: not-allowed;
+    border-radius: 50%;
+    position: absolute;
+    right: .5rem;
+    top: 50%;
+    transform: translateY(-50%);
+
+}
+
+.c-comment__submit-btn:hover{
+    filter: brightness(105%);
+}
+
+.h-comment-submit-btn{
+    color: #18acfd;
+    cursor: pointer;
+}
+.c-comment__submit-btn i{
+    pointer-events: none;
+    font-size: 20px;
+}
+
+.c-comment__popup{
+    top: calc(50% + 1.25rem);
+    z-index: 20;
+    left: 30%;
 }
 
 .c-create-post__wrapper {
@@ -922,16 +1025,16 @@ hr {
     background-color: #f2f2f2;
 }
 
-.c-pop-up__img-btn i{
+.c-pop-up__img-btn i {
     margin-top: .6rem;
 }
 
-.c-pop-up__submit-btn{
+.c-pop-up__submit-btn {
     width: calc(100% - 2rem);
     margin: 1rem;
 }
 
-.c-pop-up__file-info{
+.c-pop-up__file-info {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -940,51 +1043,53 @@ hr {
     border-radius: .375rem;
 }
 
-.c-pop-up__filename{
+.c-pop-up__filename {
     display: inline-block;
     text-align: left;
     font-weight: bold;
     margin-right: .5rem;
 }
 
-.c-pop-up__cancel-btn{
+.c-pop-up__cancel-btn {
     right: 1.25rem;
     top: 2rem;
     background-color: #ffffff;
     width: 28px;
     height: 28px;
 }
-.c-pop-up__delete-header{
+
+.c-pop-up__delete-header {
     text-align: justify;
     padding-left: 1rem;
 }
-.c-pop-up__delete-info{
+
+.c-pop-up__delete-info {
     text-align: left;
     padding: .55rem 1rem;
     color: #050505;
 }
 
-.c-pop-up__delete-form{
+.c-pop-up__delete-form {
     text-align: right;
     padding: .75rem 1rem 1rem;
 }
 
-.c-pop-up__delete-cancel-btn{
+.c-pop-up__delete-cancel-btn {
     background-color: #ffffff1A;
     color: #1877f2;
 }
 
-.c-pop-up__delete-cancel-btn:hover{
+.c-pop-up__delete-cancel-btn:hover {
     background-color: #f2f2f2;
 }
 
-.c-pop-up__delete-btn{
+.c-pop-up__delete-btn {
     background-color: #2d88ff;
     color: white;
     margin-left: .5rem;
 }
 
-.c-pop-up__delete-btn:hover{
+.c-pop-up__delete-btn:hover {
     background-color: #4294ff;
 }
 
@@ -1001,10 +1106,12 @@ hr {
     justify-content: space-between;
 }
 
-.h--border-top {
+.h--border-top{
     border-top: 1px solid #dadde1;
 }
-
+.h--border-bottom {
+    border-bottom: 1px solid #dadde1;
+}
 .l--padding {
     padding: 0 .75rem;
 }
@@ -1021,7 +1128,7 @@ hr {
     margin: 1rem;
 }
 
-.c-validation{
+.c-validation {
     background-color: rgba(0, 0, 0);
     position: absolute;
     top: 3.5rem;
@@ -1031,7 +1138,8 @@ hr {
     justify-content: flex-end;
     padding: .75rem 1rem;
 }
-.c-validation__warning{
+
+.c-validation__warning {
     display: inline-block;
     position: absolute;
     top: 50%;
@@ -1042,7 +1150,7 @@ hr {
     padding-left: 2rem;
 }
 
-.c-validation__warning::before{
+.c-validation__warning::before {
     font-family: 'FontAwesome';
     color: #ffffff;
     position: fixed;
@@ -1054,24 +1162,24 @@ hr {
 
 }
 
-.c-validation__cancel-btn{
+.c-validation__cancel-btn {
     background-color: #ffffff1A;
     color: white;
     padding: 0 3.375rem;
 }
 
-.c-validation__cancel-btn:hover{
+.c-validation__cancel-btn:hover {
     background-color: #313131;
 }
 
-.c-validation__save-btn{
+.c-validation__save-btn {
     background-color: #2d88ff;
     color: white;
     margin-left: .5rem;
     padding: 0 2.5rem;
 }
 
-.c-validation__save-btn:hover{
+.c-validation__save-btn:hover {
     background-color: #4294ff;
 }
 
@@ -1079,6 +1187,17 @@ hr {
     display: none;
 }
 
-.h--border-radius{
+.h--border-radius {
     border-radius: .5rem;
+}
+
+.h-submit-btn {
+    color: #ffffff;
+    background-color: #18acfd;
+    cursor: pointer;
+}
+
+.h-submit-btn:hover {
+    background-color: #18acfd;
+    filter: brightness(95%);
 }
