@@ -4,8 +4,6 @@
     
     if(isset($_POST['submit'])){
         $id = $_POST['submit'];
-        $deletePost = new Post();
-        $deletePost->deletePost($id);
-        echo 'post';
+        $comment = new Comment();
+        $comment->deleteComment($id);
     }
-    echo 'post';

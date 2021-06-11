@@ -17,7 +17,7 @@ const postCancelImgBtn = document.querySelector('.js-post-cancel-img-btn');
 const postUpdateBtn = document.querySelectorAll('.js-post-update-btn');
 const postDeleteBtn = document.querySelectorAll('.js-post-delete-btn');
 const commentToggleBtn = document.querySelectorAll('.js-comment-toggler');
-const commentInputFieldBtn = document.querySelectorAll('.js-comment-input');
+const commentInputFieldBtn = document.querySelectorAll('.js-comment-input'); 
 
 const uploadCoverPhoto = () => {
     const file = coverUploadPhotoBtn.files;
@@ -247,9 +247,16 @@ const handleOpenUpdatePostPopup = (text, img, id) => {
 
 const handleOpenDeletePostPopup = id =>{
     const submitBtn = document.querySelector('.js-delete-submit-btn');
+    const popup = document.querySelector('.js-delete-popup');
+    const title = document.querySelector('.js-delete-title');
+    const info = document.querySelector('.js-delete-info');
     const form = document.querySelector('.js-delete-form');
 
-    form.classList.remove('h-hide');
+    title.textContent = 'Ištrinti pranešimą?';
+    info.textContent = 'Ar tikrai norite ištrinti šį pranešimą?';
+    form.setAttribute('action', './includes/postDelete.inc.php');
+
+    popup.classList.remove('h-hide');
     submitBtn.setAttribute('value', id);
 
     togglePostManager(id);
@@ -269,10 +276,11 @@ function loadComments(event){
         postId: id
     }, function(responseText, textStatus, XMLHttpRequest) {
         if (textStatus == "success") {
-            addEvents();
+            addCommentManagerEvents();
+            addCommentDeleteEvents();
+            addCommentUpdateEvents();
         }
        if (textStatus == "error") {
-            console.log('no');
        }
     });
 }
@@ -293,6 +301,41 @@ const toggleCommentManager = id => {
     if (!id) return;
     const popup = document.getElementById(id);
     popup.classList.toggle('h-hide');
+}
+
+const openCommentDeleteForm = id =>{
+    const submitBtn = document.querySelector('.js-delete-submit-btn');
+    const popup = document.querySelector('.js-delete-popup');
+    const title = document.querySelector('.js-delete-title');
+    const info = document.querySelector('.js-delete-info');
+    const form = document.querySelector('.js-delete-form');
+
+    title.textContent = 'Ištrinti komentarą?';
+    info.textContent = 'Ar tikrai norite ištrinti šį komentarą?';
+    form.setAttribute('action', './includes/commentDelete.inc.php');
+
+    popup.classList.remove('h-hide');
+    submitBtn.setAttribute('value', id);
+
+    togglePostManager(id);
+}
+
+const openCommentUpdateForm = id =>{
+    const form = document.querySelector('.js-comment-update-popup');
+    const text = document.querySelector(`[data-text='${id}']`).textContent;
+    const textField = document.querySelector('.js-comment-update-field');
+    const submitBtn = document.querySelector('.js-update-submit-btn');
+
+    textField.textContent = text;
+    submitBtn.setAttribute('value', id);
+    console.log(text)
+    form.classList.remove('h-hide');
+    
+    togglePostManager(id);
+}
+
+function test(form){
+    form.focus();
 }
 
 const handleDropMenu = () => {
@@ -378,16 +421,49 @@ postManageBtn.forEach(btn => {
         togglePostManager(id);
     });
 });
-
-const addEvents = ()=> {
-    const commentManageBtn = document.querySelectorAll('.js-comment-menu-btn');
-    commentManageBtn.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const id = btn.nextElementSibling.id;
-            console.log(id);
-            toggleCommentManager(id);
-        });
+//functional expressions to add event listeners on dynamically created content 
+const addCommentManagerEvents = ()=> {
+    const manageBtn = document.querySelectorAll('.js-comment-menu-btn');
+    manageBtn.forEach(btn => {
+        if(needsEventListener(btn)){
+            btn.setAttribute('data-event-click', 'is set');
+            btn.addEventListener('click', () => {
+                const id = btn.nextElementSibling.id;
+                toggleCommentManager(id);
+            });
+        }
     });
+}
+
+const addCommentDeleteEvents = ()=> {
+    const deleteBtn = document.querySelectorAll('.js-comment-delete-btn');
+    deleteBtn.forEach(btn => {
+        if(needsEventListener(btn)){
+            btn.setAttribute('data-event-click', 'is set');
+            btn.addEventListener('click', () => {
+                const id = btn.parentElement.id;
+                openCommentDeleteForm(id);
+            });
+        }
+    });
+}
+
+const addCommentUpdateEvents = ()=> {
+    const updateBtn = document.querySelectorAll('.js-comment-update-btn');
+    updateBtn.forEach(btn => {
+        if(needsEventListener(btn)){
+            btn.setAttribute('data-event-click', 'is set');
+            btn.addEventListener('click', () => {
+                const id = btn.parentElement.id;
+                console.log('hi');
+                openCommentUpdateForm(id);
+            });
+        }
+    });
+}
+
+const needsEventListener = (btn) => {
+    return btn.getAttribute('data-event-click') == 'is set' ? false : true;
 }
 
 popUpNavBtns.forEach(btn => {

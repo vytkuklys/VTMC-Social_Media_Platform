@@ -41,28 +41,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://kit.fontawesome.com/85a9462cb0.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        // $(document).ready(function(){
-        //     var commentCount = 2;
-        //     // $("button").click(function(event){
-        //     //     console.log(event.target.parentElement.children[1].id);
-        //     //     var id = event.target.parentElement.children[1].id
-        //     //     commentCount +=1;
-        //     //     $(`[data-id=${id}]`).load("./includes/commentLoad.inc.php",{
-        //     //         commentCount: commentCount
-        //     //     });
-        //     // });
-        //     function loadComments(event){
-        //         console.log(event.target.parentElement.children[1].id);
-        //         var id = event.target.parentElement.children[1].id
-        //         commentCount +=1;
-        //         $(`[data-id=${id}]`).load("./includes/commentLoad.inc.php",{
-        //             commentCount: commentCount
-        //         });
-        //     }
-        // })
-    </script>
-    <link rel="stylesheet" href="css/style.css?rel=421">
+    <link rel="stylesheet" href="css/style.css?rel=116">
 </head>
 
 <body>
@@ -152,7 +131,7 @@
                 </div>
             </div>
             <div class="c-nav__controls">
-                <button class="c-btn" onclick="test()"><i class="fas fa-pen"></i> Redaguoti profilį</button>
+                <button class="c-btn"><i class="fas fa-pen"></i> Redaguoti profilį</button>
                 <button class="c-btn"><i class="fas fa-eye"></i></button>
                 <button class="c-btn"><i class="fas fa-search"></i></button>
                 <button class="c-btn"><i class="fas fa-ellipsis-h"></i></button>
@@ -325,19 +304,30 @@
                                     aria-label="Submit Form">Sukurti įrašą</button>
             </form>
         </div>
-        <div class="c-pop-up__form js-delete-form h-hide">
+        <div class="c-pop-up__form js-delete-popup h-hide">
             <div class="c-pop-up__header c-pop-up__delete-header">
-                <h2 class="c-pop-up__title">Move to Your Trash?</h2>
+                <h2 class="c-pop-up__title js-delete-title">Ištrinti pranešimą</h2>
                 <button class="c-pop-up__exit-btn js-popup-exit-btn"><i class="fas fa-times"></i></button>
             </div>
-            <p class="c-pop-up__delete-info">Items in your trash will be deleted immediately. They cannot be restored. Do you still want to delete the selected item?</p>
-            <form method="POST" action="./includes/postDelete.php" class="c-pop-up__delete-form">
+            <p class="c-pop-up__delete-info js-delete-info">Ar tikrai norite ištrinti šį pranešimą?</p>
+            <form method="POST" action="./includes/postDelete.inc.php" class="c-pop-up__delete-form js-delete-form">
                 <button class="c-btn c-pop-up__delete-cancel-btn js-popup-exit-btn">Atšaukti</button>
-                <button name="submit" class="c-btn c-pop-up__delete-btn js-delete-submit-btn">Delete</button>
+                <button name="submit" class="c-btn c-pop-up__delete-btn js-delete-submit-btn">Ištrinti</button>
+            </form>
+        </div>
+        <div class="c-pop-up__form js-comment-update-popup h-hide">
+            <div class="c-pop-up__header c-pop-up__delete-header">
+                <h2 class="c-pop-up__title js-delete-title">Redaguoti komentarą</h2>
+                <button class="c-pop-up__exit-btn js-popup-exit-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <form class="c-comment__form c-comment__update" method="POST" action="./includes/commentUpdate.inc.php">
+                    <textarea type="text" name="comment" rows="3" class="c-post__comment-btn c-comment__update-field js-comment-update-field"/></textarea>
+                    <button class="c-btn c-pop-up__delete-cancel-btn js-popup-exit-btn">Atšaukti</button>
+                    <button name="submit" class="c-btn c-pop-up__delete-btn js-update-submit-btn">Redaguoti</button>
             </form>
         </div>
     </main>
-    <script src="./js/main.js?rel=254" async defer></script>
+    <script src="./js/main.js?rel=255" async defer></script>
 </body>
 
 </html>

@@ -22,7 +22,8 @@ button {
 }
 
 input:focus,
-button:focus{
+button:focus,
+textarea:focus{
     outline-color: transparent;
 }
 
@@ -394,6 +395,7 @@ header {
 
 .c-popup {
     position: absolute;
+    z-index: 20;
     background-color: #ffffff;
     width: 20rem;
     right: 1.25rem;
@@ -618,7 +620,7 @@ hr {
     background-color: #f0f2f5;
     font-size: 15px;
     color: #65676b;
-    padding: .5rem 1.5rem .5rem .75rem;
+    padding: .5rem 2rem .5rem .75rem;
 }
 
 .c-post__comment-img {
@@ -693,6 +695,7 @@ hr {
     align-items: center;
     position: relative;
     width: fit-content;
+    padding-bottom: 1.375rem;
 }
 
 .c-comment__more-btn{
@@ -740,7 +743,6 @@ hr {
 }
 
 .c-comment__like-btn {
-    padding: .1875rem 0 .25rem;
     background-color: transparent;
     border: none;
     color: #65676b;
@@ -748,7 +750,9 @@ hr {
     font-size: 12px;
     display: block;
     cursor: pointer;
-    margin-left: 3.5rem;
+    position: absolute;
+    bottom: .25rem;
+    left: .75rem;
 }
 
 .c-comment__like-btn:hover {
@@ -791,6 +795,21 @@ hr {
     top: calc(50% + 1.25rem);
     z-index: 20;
     left: 30%;
+}
+
+.c-comment__update{
+    /* margin: 0 auto; */
+    padding: 0 1rem 1rem;
+    text-align: right;
+}
+
+.c-comment__update-field{
+    padding: .5rem 0;
+    border-radius: .5rem;
+    width: 100%;
+    margin: .5rem auto;
+    background-color: #ffffff;
+    color: #050505;
 }
 
 .c-create-post__wrapper {

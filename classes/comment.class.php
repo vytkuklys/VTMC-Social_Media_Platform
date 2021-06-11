@@ -23,4 +23,42 @@
                 $_SESSION['message'] =  "Database connection lost.";
             }
         }
+
+        public function updateComment($msg, $datetime, $id)
+        {
+            if (empty($msg) && empty($photo)) {
+                $_SESSION['message'] = "Post is required to contain message or image";
+                return;
+            }
+            
+
+            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
+            // $pdo = new PDO($dsn, $this->user, $this->pass);
+            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            try {
+                    $sql = "UPDATE `komentarai` SET `Tekstas`=?,`Redagavimo_data`=? WHERE Komentaro_id =?";
+    
+                    $statement = $this->connect()->prepare($sql);
+                    $statement->execute([$msg, $datetime, $id]);
+
+            } catch (Exception $e) {
+                $_SESSION['message'] =  "Database connection lost.";
+            }
+        }
+
+        public function deleteComment($id)
+        {
+            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
+            // $pdo = new PDO($dsn, $this->user, $this->pass);
+            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            try {
+                    $sql = "DELETE FROM `komentarai` WHERE Komentaro_id =?";
+    
+                    $statement = $this->connect()->prepare($sql);
+                    $statement->execute([$id]);
+
+            } catch (Exception $e) {
+                $_SESSION['message'] =  "Database connection lost.";
+            }
+        }
     }
