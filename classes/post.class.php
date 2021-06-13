@@ -77,6 +77,44 @@
             }
         }
 
+        public function likePost($id, $userId){
+            if (empty($id)) {
+                $_SESSION['message'] = "Post is required to contain message or image";
+                return;
+            }
+            $emoji = 1;
+            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
+            // $pdo = new PDO($dsn, $this->user, $this->pass);
+            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            try {
+                $sql = "INSERT INTO `pranesimu_reakcijos` VALUES (?, ?, ?)";
+
+                $statement = $this->connect()->prepare($sql);
+                $statement->execute([$emoji, $id, $userId]);  
+
+            } catch (Exception $e) {
+                $_SESSION['message'] =  "Database connection lost.";
+            }
+        }
+
+        public function unlikePost($id, $userId){
+            if (empty($id)) {
+                $_SESSION['message'] = "Post is required to contain message or image";
+                return;
+            }
+            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
+            // $pdo = new PDO($dsn, $this->user, $this->pass);
+            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            try {
+                $sql = "DELETE FROM `pranesimu_reakcijos` WHERE Pranesimo_id =? AND Vartotojo_id =?";
+                $statement = $this->connect()->prepare($sql);
+                $statement->execute([$id, $userId]);  
+
+            } catch (Exception $e) {
+                $_SESSION['message'] =  "Database connection lost.";
+            }
+        }
+
         private function getUniqueId()
         {
             $id = rand(100000000, 999999999);

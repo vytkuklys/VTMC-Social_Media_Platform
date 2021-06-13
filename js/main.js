@@ -9,6 +9,8 @@ const navSelectBtns = document.querySelectorAll('.js-nav-btn');
 const popUpNavBtns = document.querySelectorAll('.js-popup-nav-btn');
 const popUpOpenBtn = document.querySelector('.js-popup-open-btn');
 const popUpExitBtn = document.querySelectorAll('.js-popup-exit-btn');
+const commentToggleBtn = document.querySelectorAll('.js-comment-toggler');
+const commentInputFieldBtn = document.querySelectorAll('.js-comment-input'); 
 const postInputField = document.querySelector('.js-post-input');
 const postManageBtn = document.querySelectorAll('.js-post-manage-btn');
 const postImageBtn = document.querySelector('.js-post-img-btn');
@@ -16,8 +18,7 @@ const postCreateBtn = document.querySelectorAll('.js-open-create-post-btn');
 const postCancelImgBtn = document.querySelector('.js-post-cancel-img-btn');
 const postUpdateBtn = document.querySelectorAll('.js-post-update-btn');
 const postDeleteBtn = document.querySelectorAll('.js-post-delete-btn');
-const commentToggleBtn = document.querySelectorAll('.js-comment-toggler');
-const commentInputFieldBtn = document.querySelectorAll('.js-comment-input'); 
+const postLikeBtn = document.querySelectorAll('.js-post-like-btn');
 
 const uploadCoverPhoto = () => {
     const file = coverUploadPhotoBtn.files;
@@ -129,9 +130,9 @@ const handleCloseValidation = () => {
     coverToggleMenuBtn.style.backgroundImage = `url(./uploads/${bgImage})`;
 }
 
-const handleBioInput = digitCount => {
+const handleBioInput = digit => {
     const bioRemainingDigits = document.querySelector('.js-digits-quota');
-    const quota = 101 - digitCount;
+    const quota = 101 - digit;
     enableBioSubmit();
     if (quota < 0) {
         return;
@@ -148,13 +149,13 @@ const handleCommentInput = (event) =>{
     }
 }
 
-const isEmpty = digitCount => {
-    return !digitCount;
+const isEmpty = digit => {
+    return !digit;
 }
 
-const enablePostCreateSubmit = (digitCount) => {
+const enablePostCreateSubmit = (digit) => {
     const postSubmitBtn = document.querySelector('.js-post-submit');
-    if (isEmpty(digitCount)){
+    if (isEmpty(digit)){
         postSubmitBtn.classList.remove('h-submit-btn')   
         return;
     }
@@ -264,6 +265,7 @@ const handleOpenDeletePostPopup = id =>{
 
 const handleCommentsMenuToggle = id =>{
     const menu = document.querySelector(`[data-id="${id}"]`).parentElement;
+    console.log(id);
     if(menu.classList.contains('h-hide')){
         loadComments(event);
     }
@@ -271,7 +273,7 @@ const handleCommentsMenuToggle = id =>{
 }
 
 function loadComments(event){
-    var id = event.target.parentElement.children[1].id
+    var id = event.target.parentElement.parentElement.children[1].id
     $(`[data-id=${id}]`).load("./includes/commentLoad.inc.php",{
         postId: id
     }, function(responseText, textStatus, XMLHttpRequest) {
@@ -283,6 +285,68 @@ function loadComments(event){
        if (textStatus == "error") {
        }
     });
+}
+
+const unlikePost = id =>{
+    $(`[data-id=${id}]`).load("./includes/postUnlike.inc.php",{
+        postId: id
+    }, function(responseText, textStatus, XMLHttpRequest) {
+        if (textStatus == "success") {
+            renderPostUnlike(id);
+        }
+       if (textStatus == "error") {
+           console.log('Something went wrong');
+       }
+    });
+}
+
+const isPostLiked = id =>{
+    const btn = document.querySelector(`[data-likes="${id}"]`);
+    console.log(btn)
+    return btn.classList.contains('h-color');
+}
+
+const handleLikedPost = id => {
+    if(isPostLiked(id)){
+        unlikePost(id);
+        return;
+    }
+    $(`[data-id=${id}]`).load("./includes/postLike.inc.php",{
+        postId: id
+    }, function(responseText, textStatus, XMLHttpRequest) {
+        if (textStatus == "success") {
+            renderPostLike(id);
+        }
+       if (textStatus == "error") {
+           console.log('Something went wrong');
+       }
+    });
+}
+
+function renderPostUnlike (id){
+    const container = document.querySelector(`[data-reaction="${id}"]`);
+    const like = container.children[0];
+    const likeBtn = container.nextElementSibling.children[0];
+    const counter = container.children[0].children[1];
+    const newLikesNr = parseInt(counter.textContent) - 1;
+
+    likeBtn.classList.remove('h-color');
+    if(newLikesNr === 0){
+        like.classList.add('h-hide');
+    }
+    counter.textContent = newLikesNr;
+}
+
+function renderPostLike (id){
+    const container = document.querySelector(`[data-reaction="${id}"]`);
+    const like = container.children[0];
+    const likeBtn = container.nextElementSibling.children[0];
+    const counter = container.children[0].children[1];
+    const newLikesNr = parseInt(counter.textContent) + 1;
+
+    likeBtn.classList.add('h-color');
+    like.classList.remove('h-hide');
+    counter.textContent = newLikesNr;
 }
 
 const handleOpenPopUp = () => {
@@ -334,10 +398,6 @@ const openCommentUpdateForm = id =>{
     togglePostManager(id);
 }
 
-function test(form){
-    form.focus();
-}
-
 const handleDropMenu = () => {
     const dropMenu = document.querySelector('.c-nav__drop-items');
     dropMenu.classList.toggle('h-hide');
@@ -381,20 +441,20 @@ const handleSelectNavBtn = id => {
 const handleCancelImagePost = e => {
     e.preventDefault();
     const image = document.getElementById('postImg');
-    const imageInfo = document.querySelector('.js-file-info');
+    const imageContainer = document.querySelector('.js-file-info');
     image.value = null;
-    imageInfo.classList.add('h-hide');
+    imageContainer.classList.add('h-hide');
 }
 
 bioInputField.addEventListener('keyup', () => {
-    const digitCount = bioInputField.value.length;
-    handleBioInput(digitCount);
+    const digit = bioInputField.value.length;
+    handleBioInput(digit);
 });
 
 postInputField.addEventListener('keyup', () => {
-    const digitCount = postInputField.value.length;
-    console.log(digitCount);
-    enablePostCreateSubmit(digitCount);
+    const digit = postInputField.value.length;
+    console.log(digit);
+    enablePostCreateSubmit(digit);
 });
 
 commentInputFieldBtn.forEach(field =>{
@@ -506,12 +566,58 @@ postDeleteBtn.forEach(btn => {
     });
 });
 
+postLikeBtn.forEach(btn => {
+    btn.addEventListener('click', ()=>{
+        const id = btn.parentElement.parentElement.children[1].id;
+        console.log(id);
+        handleLikedPost(id);
+    });
+});
+
 commentToggleBtn.forEach(btn => {
     btn.addEventListener('click', ()=>{
-        const id = btn.parentElement.children[1].id;
+        const id = btn.parentElement.parentElement.children[1].id;
+        console.log(id);
         handleCommentsMenuToggle(id);
     });
 });
+
+const renderUserPostLikes = postIds =>{
+    postIds.forEach(id =>{
+       document.querySelector(`[data-likes="${id}"]`).classList.add('h-color');
+    })
+}
+
+const handleActiveUserLikes = json =>{
+    const postIds = Object.keys(json).map((key) => json[key] == "Posts" ? key : "").filter(key => key);
+    renderUserPostLikes(postIds);
+    console.log(postIds)
+}
+
+const fetchLikes = () =>{
+    const id = 123;
+    $.ajax({
+    url:"./includes/postFetchReaction.inc.php",
+    method:"POST",
+    data:{id:id},
+    dataType:"text",
+    success:function(data)
+    {
+        console.log(data);
+        const json = JSON.parse(data);
+        handleActiveUserLikes(json);
+    },error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+    } 
+   });
+}
+
+
+if(document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fetchLikes);
+} else {
+    fetchLikes();
+}
 
 coverToggleMenuBtn.addEventListener('click', (e) => {
     if (e.target.classList.contains('js-cover-btn') || e.target.classList.contains('c-hero__cover-btn')) {

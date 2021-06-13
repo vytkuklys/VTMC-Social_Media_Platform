@@ -41,7 +41,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://kit.fontawesome.com/85a9462cb0.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?rel=116">
+
+    <link rel="stylesheet" href="css/style.css?rel=124">
 </head>
 
 <body>
@@ -166,15 +167,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="container l-grid">
-            <div class="c-posts">
-            <?php
-                try {
-                    $connectM = new PDO("mysql:host=$host; dbname=$dbName", $user, $pass);
-                    $connectM->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    $sql = "
-                    SELECT pranesimai.*, 
+        <!-- SELECT pranesimai.*, 
                     vartotojai.Vardas, vartotojai.Pavarde, 
                     COUNT(komentarai.Pranesimas) as Total_comments
                         FROM `pranesimai` 
@@ -183,19 +176,42 @@
                         RIGHT JOIN vartotojai
                         ON vartotojai.Vartotojo_id = pranesimai.Autorius
                         GROUP BY pranesimai.Pranesimo_id
-                        ORDER BY pranesimai.Redagavimo_data DESC";
+                        ORDER BY pranesimai.Redagavimo_data DESC -->
+        <div class="container l-grid">
+            <div class="c-posts">
+            <?php
+                try {
+                    $connectM = new PDO("mysql:host=$host; dbname=$dbName", $user, $pass);
+                    $connectM->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    $sql = "
+                        SELECT p.*,
+                                (SELECT COUNT(*) FROM komentarai k WHERE k.Pranesimas = p.Pranesimo_id) as Total_comments, 
+                                (SELECT COUNT(*) FROM pranesimu_reakcijos p_r WHERE p_r.Pranesimo_id = p.Pranesimo_id) as Total_likes,
+                                v.Vardas,
+                                v.Pavarde
+                                FROM pranesimai p INNER JOIN
+                                vartotojai v
+                                ON v.Vartotojo_id = p.Autorius
+                                ORDER BY p.Redagavimo_data DESC";
                     $result = $connectM->prepare($sql);
                     $result->execute();
-                    $hideCss = "h-hide";
-                    $showCss = "";                            
+                    $hideComments = "h-hide";
+                    $showComments = "";
+                    $hideLikes = "h-hide";  
+                    $colorLikes = "h-color";                   
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         $datetime = explode(' ', $row['Redagavimo_data']);
                         if($row['Total_comments'] > 0){
-                            $hideCss = "";
-                            $showCss = "h-hide";
+                            $hideComments = "";
+                            $showComments = "h-hide";
                         }else{
-                            $hideCss = "h-hide";
-                            $showCss = "";
+                            $hideComments = "h-hide";
+                            $showComments = "";
+                        }
+                        if($row['Total_likes'] > 0){
+                            $hideLikes = "";
+                        }else{
+                            $hideLikes = "h-hide";
                         }
                         $date = $datetime[0];
                         $time = end($datetime);
@@ -224,13 +240,16 @@
                             empty($row['Nuotrauka']) ? "" :
                             "<img src=\"./uploads/".$row['Nuotrauka']."\" class=\"c-post__img\" alt=\"\">";
                         echo
-                            "<button class=\"c-comment__toggler js-comment-toggler ".$hideCss."\">".$row['Total_comments']." komentarai</button>
+                            "<div class=\"c-reactions__wrapper\" data-reaction=\"".$row['Pranesimo_id']."\">
+                                <p class=\"c-likes ".$hideLikes."\"><span class=\"c-likes__icon\"><i class=\"fas fa-thumbs-up\"></i></span><span class=\"c-likes__counter\">".$row['Total_likes']."</span></p>
+                                <button class=\"c-comment__toggler js-comment-toggler ".$hideComments."\">".$row['Total_comments']." komentarai</button>
+                            </div>
                             <div class=\"l--flex h--border-top h--border-bottom\">
-                                <button class=\"c-btn c-post__option\"><i class=\"far fa-thumbs-up\"></i>Patinka</button>
+                                <button class=\"c-btn c-post__option js-post-like-btn\" data-likes=".$row['Pranesimo_id']."><i class=\"far fa-thumbs-up\"></i>Patinka</button>
                                 <button class=\"c-btn c-post__option\"><i class=\"far fa-comment-alt\"></i>Komentuoti</button>
                                 <button class=\"c-btn c-post__option\"><i class=\"fas fa-share\"></i>Bendrinti</button>
                             </div>
-                            <div class=\"c-comment l--padding-top ".$showCss."\">
+                            <div class=\"c-comment l--padding-top ".$showComments."\">
                                 <ul class=\"c-comment__items\" data-id=\"".$row['Pranesimo_id']."\"></ul>
                                 <div class=\" l--flex l--padding-bottom\">
                                     <img class=\"c-post__comment-img\" src=\"./images/male.jpg\" alt=\"User Profile Image\">
@@ -326,8 +345,32 @@
                     <button name="submit" class="c-btn c-pop-up__delete-btn js-update-submit-btn">Redaguoti</button>
             </form>
         </div>
+        <button type="button" name="search" id="search" class="btn btn-info">Search</button>
+
     </main>
-    <script src="./js/main.js?rel=255" async defer></script>
+    <!-- <script>
+    $(document).ready(function(){
+    $(function(){
+    const id = 123;
+    $.ajax({
+    url:"./includes/postReaction.inc.php",
+    method:"POST",
+    data:{id:id},
+    dataType:"text",
+    success:function(data)
+    {
+        console.log(JSON.parse(data));
+        let tmp = JSON.parse(data);
+        var result = Object.keys(tmp).map((key) => tmp[key] == "Comments" ? key : "").filter(key => key);
+        console.log(result)
+    },error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+    } 
+   })
+ });
+});
+</script> -->
+    <script src="./js/main.js?rel=135" async defer></script>
 </body>
 
 </html>

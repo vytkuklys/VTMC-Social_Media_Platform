@@ -101,6 +101,44 @@ li {
     margin-bottom: .3rem;
 }
 
+.c-likes{
+    display: table;
+    text-indent: .35rem;
+    padding: .675rem 0;
+}
+
+.c-likes__counter,
+.c-likes__icon{
+    cursor: pointer;
+}
+
+.c-likes__counter:hover{
+    text-decoration: underline;
+}
+
+.c-likes__icon{
+    display: flex;
+    justify-content: center;
+    align-items: top;
+    display: table-cell;
+    background-image: linear-gradient(#18acfd, #0f6be1);
+    width: 1.25rem;
+    height: 1.25rem;
+    align-items: center;
+    margin-bottom: .25rem;
+    border-radius: 50%;
+    font-size: .75rem;
+    color: #ffffff;
+    padding-left: .2rem;
+    text-indent: initial;
+}
+
+.c-likes__icon i {
+    position: absolute;
+    margin-top: .2rem;
+    left: 1.25rem;
+}
+
 /*------------------ INDEX.PHP --------------------*/
 
 .c-banner {
@@ -690,6 +728,12 @@ hr {
     font-size: 20px;
 }
 
+.c-reactions__wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .c-comment__wrapper{
     justify-content: flex-start;
     align-items: center;
@@ -704,7 +748,7 @@ hr {
 }
 
 .c-comment__toggler {
-    padding: .675rem 0;
+    padding: 0;
     background-color: transparent;
     border: none;
     color: #65676b;
@@ -712,6 +756,7 @@ hr {
     display: block;
     margin-left: auto;
     cursor: pointer;
+    padding: .675rem 0;
 }
 
 .c-comment__toggler:hover {
@@ -810,6 +855,26 @@ hr {
     margin: .5rem auto;
     background-color: #ffffff;
     color: #050505;
+}
+
+.c-comment__likes{
+    background-color: #fff;
+    padding: .125rem .15rem .125rem .125rem;
+    border-radius: .625rem;
+    font-size: 13px;
+    color: #65676b;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2)
+}
+
+.c-comment__likes-icon{
+    width: 1.063rem;
+    height: 1rem;
+    font-size: .65rem;
+    padding-left: initial;
+}
+
+.c-comment__likes-icon i{
+    margin: .19rem 0 0 -.15rem;
 }
 
 .c-create-post__wrapper {
@@ -1178,7 +1243,6 @@ hr {
     left: 0;
     transform: translate(0, -50%);
     content: '\f7a2';
-
 }
 
 .c-validation__cancel-btn {
@@ -1219,4 +1283,8 @@ hr {
 .h-submit-btn:hover {
     background-color: #18acfd;
     filter: brightness(95%);
+}
+
+.h-color{
+    color: #2078f4;
 }

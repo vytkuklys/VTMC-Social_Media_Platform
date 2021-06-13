@@ -15,9 +15,10 @@
             // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             try {
                 // $sql = "INSERT INTO `pranesimai` VALUES (?, ?, ?, ?, ?, ?)";
-                $sql = "INSERT INTO `komentarai` VALUES (?, ?, ?, ?, ?)";
+                $sql = "INSERT INTO `komentarai` VALUES (?, ?, ?, ?, ?, ?)";
                 $statement = $this->connect()->prepare($sql);
-                $statement->execute([$id, $comment, $datetime, $postId, $userId]);
+                $statement->execute([$id, $comment, $datetime, $datetime, $postId, $userId]);
+                echo "2";
 
             } catch (Exception $e) {
                 $_SESSION['message'] =  "Database connection lost.";

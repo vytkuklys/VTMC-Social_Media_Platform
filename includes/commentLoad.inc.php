@@ -21,6 +21,7 @@
                     <div class=\"c-comment__details\">
                         <p class=\"c-comment__author\">".$row['Vardas']." ".$row['Pavarde']."</p>
                         <p class=\"c-comment__message\" data-text=\"".$row['Komentaro_id']."\">".$row['Tekstas']."</p>
+                        <p class=\"c-likes c-comment__likes\"><span class=\"c-likes__icon c-comment__likes-icon\"><i class=\"fas fa-thumbs-up\"></i></span><span class=\"c-likes__counter\">2</span></p>
                     </div>
                     <button class=\"c-btn c-post__more-btn c-comment__more-btn js-comment-menu-btn\"><i class=\"fas fa-ellipsis-h\"></i></button>
                     <div class=\"c-popup c-comment__popup h-hide\" id=\"".$row['Komentaro_id']."\">
@@ -35,12 +36,3 @@
     }catch (PDOException $error) { 
         echo $error->getMessage();
     }
-
-    // <input type=\"text\" name=\"comment\" class=\"c-post__comment-btn js-comment-input\"
-    // placeholder=\"Parašykite komentarą...\" value=\"".$row['Tekstas']."\">
-
-
-    // <form class=\"c-comment__form h-hide\" method=\"POST\" action=\"./includes/commentCreate.inc.php\">
-    //                 <input type=\"text\" autofocus=\"autofocus\" value=\"tjos\" onfocus=\"var temp_value=this.value; this.value=''; this.value=temp_value\" name=\"comment\" class=\"c-post__comment-btn js-comment-input\"/>
-    //                 <button class=\"c-comment__submit-btn\" name=\"submit\" value=\"".$row['Komentaro_id']."\"><i class=\"fas fa-plus-circle\"></i></button>
-    //             </form>
