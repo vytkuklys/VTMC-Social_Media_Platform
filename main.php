@@ -42,7 +42,7 @@
     <script src="https://kit.fontawesome.com/85a9462cb0.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <link rel="stylesheet" href="css/style.css?rel=124">
+    <link rel="stylesheet" href="css/style.css?rel=255">
 </head>
 
 <body>
@@ -57,8 +57,14 @@
                         <i class="fas fa-search"></i>
                     </div>
                     <input type="text" aria-label="Post Search" placeholder="Search Faceboek" aria-hidden="false"
-                        name="search" id="searchPosts" class="c-search__input-field">
+                        name="search" id="searchPosts" class="c-search__input-field js-search" autocomplete="off">
                 </label>
+                <div class="js-autocomplete">
+                    <!-- <p class="c-search__autocomplete-item"><span class="c-search__icon"></span><span>Lucas Enco</p>
+                    <p class="c-search__autocomplete-item hs-autocomplete-active"><span class="c-search__icon"></span>Simonas Donskovas</p>
+                    <p class="c-search__autocomplete-item"><span class="c-search__icon"></span>Search for&nbsp;<span class="h-bold js-search-value">this</span></p> -->
+                </div>
+                <button class="js-close-autocomplete h-hide c-search__close-btn c-btn" aria-label="hidden"><i class="fas fa-arrow-left"></i></button>
             </div>
         </div>
         <div class="c-controls l-controls--flex" aria-label="Account Controls and Settings">
@@ -66,7 +72,7 @@
                 <img src="./images/male.jpg" alt="Profile photo" class="c-controls__img">
                 <p><?php echo $_SESSION['firstname'];?></p>
             </div>
-            <button class="c-controls__settings l-controls--margin">
+            <button class="c-controls__settings c-btn l-controls--margin">
                 <i class="fas fa-sort-down"></i>
             </button>
         </div>
@@ -83,7 +89,7 @@
                     </label>
                 </div>
                 <button class="c-hero__cover-btn"><i class="fas fa-camera"></i>Pridėti viršelio nuotrauką</button>
-                <div class="c-hero__cover-popup c-popup h-hide">
+                <div class="c-hero__cover-popup c-popup h-hide" id="cover-photo">
                     <button class="js-popup-open-btn"><i class="far fa-images"></i>Pasirinkti nuotrauką</button>
                     <label for="uploadCover">
                         <i class="fas fa-upload"></i>Įkelti nuotrauką
@@ -97,7 +103,7 @@
                     <button aria-hidden="false" class="c-hero__bio-show h-show js-bio-show">Pridėti biografiją</button>
                     <form aria-hidden="true" class="c-hero__bio-form h-hide js-bio-form" method="POST">
                         <textarea class="c-hero__bio-input js-bio-input" maxlength="101" name="bio"
-                            aria-label="Enter Bio Text" cols="32" rows="3" placeholder="Apibūdinkite save"></textarea>
+                            aria-label="Enter Bio Text" cols="32" rows="3" placeholder="Apibūdinkite save" required></textarea>
                         <p class="c-hero__bio-info"><span class="c-hero__bio-digit js-digits-quota">101</span>
                             characters remaining</p>
                         <div class="c-hero__bio-btns">
@@ -151,21 +157,6 @@
                     <button class="c-create-post__btn js-open-create-post-btn"><i class="far fa-images"></i> Photo/Video</button>
                 </div>
             </div>
-            <div class="c-filter-post">
-                <div class="l--flex l--center-justify l--padding-bottom l--padding">
-                    <h3 class="c-filter-post__title">Įrašai</h3>
-                    <div class="c-nav__controls">
-                        <button class="c-btn"><i class="fas fa-sliders-h"></i>Filtrai</button>
-                        <button class="c-btn"><i class="fas fa-cog"></i>Tvarkyti įrašus</button>
-                    </div>
-                </div>
-                <div class="l--flex l--center-justify h--border-top l--padding">
-                    <button href="#" class="c-filter-post__layout-btn c-underlined-btn h-selected js-nav-btn"
-                        id="posts-link"><i class="fas fa-bars"></i>Sąrašo rodinys</button>
-                    <button href="#" class="c-filter-post__layout-btn c-underlined-btn js-nav-btn" id="about-link"><i
-                            class="fas fa-th-large"></i>Grid View</button>
-                </div>
-            </div>
         </div>
         <!-- SELECT pranesimai.*, 
                     vartotojai.Vardas, vartotojai.Pavarde, 
@@ -216,11 +207,11 @@
                         $date = $datetime[0];
                         $time = end($datetime);
                         echo 
-                        "<div class=\"c-post\">
+                        "<div class=\"c-post\" data-post=\"".$row['Pranesimo_id']."\">
                             <div class=\"l--flex l--center-justify\">
                                 <img class=\"c-profile-img\" src=\"./images/male.jpg\" alt=\"User Profile Image\">
                                 <div class=\"c-post__details\">
-                                    <p class=\"c-post__author\">".$row['Vardas']." ".$row['Pavarde']."</p>
+                                    <p class=\"c-post__author\" data-author=\"".$row['Pranesimo_id']."\">".$row['Vardas']." ".$row['Pavarde']."</p>
                                     <p class=\"c-post__datetime\">".$date.", ".$time."</p>
                                 </div>
                                 <button class=\"c-btn c-post__more-btn js-post-manage-btn\"><i
@@ -234,7 +225,7 @@
                                 <hr>
                                 <button class=\"js-post-delete-btn\"><i class=\"far fa-trash-alt\"></i> Move to trash</button>
                             </div>
-                            <p class=\"c-post__text\">".$row['Tekstas']."</p>";
+                            <p class=\"c-post__text\" data-msg=\"".$row['Pranesimo_id']."\">".$row['Tekstas']."</p>";
                         
                         echo 
                             empty($row['Nuotrauka']) ? "" :
@@ -242,11 +233,11 @@
                         echo
                             "<div class=\"c-reactions__wrapper\" data-reaction=\"".$row['Pranesimo_id']."\">
                                 <p class=\"c-likes ".$hideLikes."\"><span class=\"c-likes__icon\"><i class=\"fas fa-thumbs-up\"></i></span><span class=\"c-likes__counter\">".$row['Total_likes']."</span></p>
-                                <button class=\"c-comment__toggler js-comment-toggler ".$hideComments."\">".$row['Total_comments']." komentarai</button>
+                                <button class=\"c-comment__toggler js-comment-toggler ".$hideComments."\" data-comments=\"".$row['Pranesimo_id']."\">".$row['Total_comments']." komentarai</button>
                             </div>
                             <div class=\"l--flex h--border-top h--border-bottom\">
                                 <button class=\"c-btn c-post__option js-post-like-btn\" data-likes=".$row['Pranesimo_id']."><i class=\"far fa-thumbs-up\"></i>Patinka</button>
-                                <button class=\"c-btn c-post__option\"><i class=\"far fa-comment-alt\"></i>Komentuoti</button>
+                                <button class=\"c-btn c-post__option js-comment-toggler\" data-comments=\"".$row['Pranesimo_id']."\"><i class=\"far fa-comment-alt\"></i>Komentuoti</button>
                                 <button class=\"c-btn c-post__option\"><i class=\"fas fa-share\"></i>Bendrinti</button>
                             </div>
                             <div class=\"c-comment l--padding-top ".$showComments."\">
@@ -255,7 +246,7 @@
                                     <img class=\"c-post__comment-img\" src=\"./images/male.jpg\" alt=\"User Profile Image\">
                                     <form class=\"c-comment__form\" method=\"POST\" action=\"./includes/commentCreate.inc.php\">
                                         <input type=\"text\" name=\"comment\" class=\"c-post__comment-btn js-comment-input\"
-                                        placeholder=\"Parašykite komentarą...\">
+                                        placeholder=\"Parašykite komentarą...\" required>
                                         <button class=\"c-comment__submit-btn\" name=\"submit\" value=\"".$row['Pranesimo_id']."\"><i class=\"fas fa-plus-circle\"></i></button>
                                     </form>
                                 </div>
@@ -305,14 +296,14 @@
                 <p class="c-pop-up__fullname">Simonas Donskovas</p>
             </div>
             <form method="POST" action="./includes/postCreate.inc.php" enctype="multipart/form-data" class="js-popup-form">
-                <textarea name="postMsg" rows="4" placeholder="Ką galvojate?" class="c-pop-up__input-msg js-post-input"></textarea>
+                <textarea name="postMsg" rows="4" placeholder="Ką galvojate?" class="c-pop-up__input-msg js-post-input" required></textarea>
                 <div class="c-pop-up__file-info js-file-info h-hide">
                     <!-- <p class="c-pop-up__filename">filename.jpg</p> -->
-                    <img src="" alt="Uploaded Image Preview" class="js-popup-img h--border-radius" width="100%"> 
+                    <img src="" alt="Uploaded Image Preview" class="c-pop-up__file-img js-popup-img h--border-radius" width="100%">
                     <button class="c-pop-up__exit-btn c-pop-up__cancel-btn js-post-cancel-img-btn"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="c-pop-up__extras">
-                    <p class="c-pop-up__subtitle">Pridėkite prie savo įrašo</p>
+                    <p class="c-pop-up__subtitle">Pridėkite prie savo įrašą</p>
                     <!-- <button class="c-pop-up__img-btn"><i class="far fa-images"></i></button> -->
                     <label for="postImg" class="c-pop-up__img-btn">
                         <input type="file" id="postImg" class="js-post-img-btn" name="file" accept=".jpg, .jpeg, .png">
@@ -345,32 +336,8 @@
                     <button name="submit" class="c-btn c-pop-up__delete-btn js-update-submit-btn">Redaguoti</button>
             </form>
         </div>
-        <button type="button" name="search" id="search" class="btn btn-info">Search</button>
-
     </main>
-    <!-- <script>
-    $(document).ready(function(){
-    $(function(){
-    const id = 123;
-    $.ajax({
-    url:"./includes/postReaction.inc.php",
-    method:"POST",
-    data:{id:id},
-    dataType:"text",
-    success:function(data)
-    {
-        console.log(JSON.parse(data));
-        let tmp = JSON.parse(data);
-        var result = Object.keys(tmp).map((key) => tmp[key] == "Comments" ? key : "").filter(key => key);
-        console.log(result)
-    },error: function(XMLHttpRequest, textStatus, errorThrown) { 
-        alert("Status: " + textStatus); alert("Error: " + errorThrown); 
-    } 
-   })
- });
-});
-</script> -->
-    <script src="./js/main.js?rel=135" async defer></script>
+    <script type="module" src="./js/main.js?rel=415" async defer></script>
 </body>
 
 </html>

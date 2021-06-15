@@ -7,6 +7,6 @@
         $userId = $_SESSION["userId"];
         $postId = $_POST['submit'];
         $comment = $_POST['comment'];
-        $create = new Comment();
-        $create->createComment($comment, $datetime, $userId, $postId);
+        $commentNew = new Comment();
+        $commentNew->createComment($comment, $datetime, $userId, $postId);
     }

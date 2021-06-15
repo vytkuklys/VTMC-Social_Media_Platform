@@ -11,6 +11,7 @@ body {
     line-height: 1.34;
     font-size: 15px;
     color: #1c1e21;
+    overflow-x: hidden;
 }
 
 a {
@@ -23,7 +24,7 @@ button {
 
 input:focus,
 button:focus,
-textarea:focus{
+textarea:focus {
     outline-color: transparent;
 }
 
@@ -66,6 +67,11 @@ li {
     background-color: #d8dadf;
 }
 
+.c-btn:active {
+    background-color: #cccfd4 !important;
+    transform: scale(.975);
+}
+
 .c-btn i {
     margin: 0 .2475rem;
 }
@@ -97,26 +103,30 @@ li {
     background-color: #d8dadf;
 }
 
+.c-pop-up__exit-btn:active {
+    background-color: #cccfd4;
+}
+
 .c-pop-up__exit-btn i {
     margin-bottom: .3rem;
 }
 
-.c-likes{
+.c-likes {
     display: table;
     text-indent: .35rem;
     padding: .675rem 0;
 }
 
 .c-likes__counter,
-.c-likes__icon{
+.c-likes__icon {
     cursor: pointer;
 }
 
-.c-likes__counter:hover{
+.c-likes__counter:hover {
     text-decoration: underline;
 }
 
-.c-likes__icon{
+.c-likes__icon {
     display: flex;
     justify-content: center;
     align-items: top;
@@ -251,6 +261,97 @@ header {
 .c-search {
     display: flex;
     align-items: center;
+    position: relative;
+    padding-right: 1rem;
+}
+
+.c-search__autocomplete {
+    position: absolute;
+    z-index: 20;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 0;
+    left: 0;
+    padding: 3.5rem .5rem .5rem;
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom-left-radius: .5rem;
+    border-bottom-right-radius: .5rem;
+    box-shadow: 0 14px 16px 0 #bebebeaf, 0 2px 4px 0 #dcdcdc, inset 0 0 0 1px #e4e6eb;
+
+}
+
+.c-search__autocomplete-item {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: .5rem;
+    border-radius: .5rem;
+    color: #050505;
+    font-weight: 600;
+}
+
+.c-search__autocomplete-item span {
+    white-space: pre-wrap;
+}
+
+/*when hovering an item:*/
+.c-search__autocomplete-item:hover {
+    background-color: #e9e9e9;
+}
+
+.c-search__autocomplete-item:last-child {
+    color: #1877f2;
+    font-weight: 400;
+}
+
+.c-search__autocomplete-item:last-child .c-search__icon {
+    background-color: #1877f2;
+}
+
+.c-search__autocomplete-item:last-child .c-search__icon::before {
+    color: white;
+}
+
+.c-search__close-btn {
+    border-radius: 50%;
+    width: 2.25rem;
+    height: 2.25rem;
+    background-color: transparent;
+    position: absolute;
+    z-index: 25;
+    left: .2rem;
+}
+
+.c-search__close-btn:hover {
+    background-color: #f2f2f2;
+}
+
+.c-search__close-btn i {
+    margin-left: -.1rem;
+}
+
+.c-search__icon {
+    background-color: #f0f2f5;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    margin-right: .75rem;
+    position: relative;
+}
+
+.c-search__icon::before {
+    font-family: 'FontAwesome';
+    color: #a4a4ac;
+    position: absolute;
+    font-size: 1.15rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    content: '\f002';
 }
 
 .c-search__logo {
@@ -270,6 +371,7 @@ header {
     width: 18.25rem;
     height: 2.5rem;
     color: #606770;
+    z-index: 25;
 }
 
 .c-search__input-icon {
@@ -318,13 +420,10 @@ header {
 }
 
 .c-controls__settings {
-    background-color: #e4e6eb;
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
-    border: none;
     position: relative;
-    cursor: pointer;
 }
 
 .c-controls__settings:hover {
@@ -336,6 +435,7 @@ header {
     position: absolute;
     pointer-events: none;
     top: 42.5%;
+    margin: 0;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -386,6 +486,11 @@ header {
     background-color: #f2f2f2;
 }
 
+.c-hero__cover-btn:active {
+    background-color: #cccfd4;
+    transform: scale(.975);
+}
+
 .c-hero__cover-btn i {
     margin-right: .25rem;
 }
@@ -431,6 +536,10 @@ header {
     background-color: #e0e1e4;
 }
 
+.c-hero__profile-btn:active {
+    background-color: #cccfd4;
+}
+
 .c-popup {
     position: absolute;
     z-index: 20;
@@ -440,6 +549,7 @@ header {
     border-radius: .5rem;
     padding: .5rem;
     box-shadow: 0 12px 28px 0 #e4e6eb, 0 2px 4px 0 #e0e1e4, inset 0 0 0 1px #e4e6eb;
+
 }
 
 .c-popup button,
@@ -470,6 +580,12 @@ hr {
 .c-popup button:hover,
 .c-popup label:hover {
     background-color: #f2f2f2;
+}
+
+.c-popup button:active,
+.c-popup label:active {
+    background-color: #f2f2f2;
+    background-color: #cccfd4 !important;
 }
 
 .c-popup button i,
@@ -592,6 +708,10 @@ hr {
     background-color: #f2f2f2;
 }
 
+.c-underlined-btn:active {
+    background-color: #cccfd4;
+}
+
 .c-nav__drop-btn {
     border: none;
     background-color: transparent;
@@ -617,6 +737,7 @@ hr {
     border-radius: .5rem;
     box-shadow: 0 12px 28px 0 #e4e6eb, 0 2px 4px 0 #d8dadf, inset 0 0 0 1px #e4e6eb;
     min-width: 328px;
+    z-index: 25;
 }
 
 .c-nav__drop-item {
@@ -633,7 +754,7 @@ hr {
 
 .c-create-post {
     max-width: 500px;
-    margin: 0 auto;
+    margin: 0 auto -1rem;
     border-radius: .5rem;
     padding: .75rem 1rem .625rem;
     background-color: #ffffff;
@@ -641,7 +762,7 @@ hr {
 }
 
 .c-post {
-    margin: 1rem auto;
+    margin: 0 auto 1rem;
     max-width: 500px;
     position: relative;
     border-radius: .5rem;
@@ -724,17 +845,21 @@ hr {
     max-width: 21.5rem;
 }
 
+.c-post__popup button:active {
+    background-color: #cccfd4;
+}
+
 .c-post__popup button i {
     font-size: 20px;
 }
 
-.c-reactions__wrapper{
+.c-reactions__wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.c-comment__wrapper{
+.c-comment__wrapper {
     justify-content: flex-start;
     align-items: center;
     position: relative;
@@ -742,7 +867,7 @@ hr {
     padding-bottom: 1.375rem;
 }
 
-.c-comment__more-btn{
+.c-comment__more-btn {
     width: 36px;
     margin-left: .25rem;
 }
@@ -773,6 +898,7 @@ hr {
     background-color: #f0f2f5;
     border-radius: 1.125rem;
     width: fit-content;
+    position: relative;
 }
 
 .c-comment__author {
@@ -804,13 +930,13 @@ hr {
     text-decoration: underline;
 }
 
-.c-comment__form{
+.c-comment__form {
     position: relative;
     width: 100%;
     height: fit-content;
 }
 
-.c-comment__submit-btn{
+.c-comment__submit-btn {
     background-color: transparent;
     border: none;
     color: #70757f;
@@ -820,35 +946,38 @@ hr {
     right: .5rem;
     top: 50%;
     transform: translateY(-50%);
-
 }
 
-.c-comment__submit-btn:hover{
+.c-comment__submit-btn:hover {
     filter: brightness(105%);
 }
 
-.h-comment-submit-btn{
+.c-comment__submit-btn:active {
+    color: #129ae4;
+}
+
+.h-comment-submit-btn {
     color: #18acfd;
     cursor: pointer;
 }
-.c-comment__submit-btn i{
+
+.c-comment__submit-btn i {
     pointer-events: none;
     font-size: 20px;
 }
 
-.c-comment__popup{
+.c-comment__popup {
     top: calc(50% + 1.25rem);
     z-index: 20;
     left: 30%;
 }
 
-.c-comment__update{
-    /* margin: 0 auto; */
+.c-comment__update {
     padding: 0 1rem 1rem;
     text-align: right;
 }
 
-.c-comment__update-field{
+.c-comment__update-field {
     padding: .5rem 0;
     border-radius: .5rem;
     width: 100%;
@@ -857,24 +986,26 @@ hr {
     color: #050505;
 }
 
-.c-comment__likes{
+.c-comment__likes {
     background-color: #fff;
     padding: .125rem .15rem .125rem .125rem;
     border-radius: .625rem;
     font-size: 13px;
     color: #65676b;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2)
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+    position: absolute;
+    right: -.5rem;
 }
 
-.c-comment__likes-icon{
+.c-comment__likes-icon {
     width: 1.063rem;
     height: 1rem;
     font-size: .65rem;
     padding-left: initial;
 }
 
-.c-comment__likes-icon i{
-    margin: .19rem 0 0 -.15rem;
+.c-comment__likes-icon i {
+    margin: .19rem 0 0 -.9rem;
 }
 
 .c-create-post__wrapper {
@@ -887,6 +1018,8 @@ hr {
     border-radius: 50%;
     margin-right: .5rem;
 }
+
+
 
 .c-create-post__open-btn {
     width: 100%;
@@ -945,35 +1078,6 @@ hr {
 
 .c-create-post__btn:last-child i {
     color: #45bd62;
-}
-
-.c-filter-post {
-    max-width: 500px;
-    margin: 1rem auto 0;
-    border-radius: .5rem;
-    padding: .5rem 0 0;
-    background-color: #ffffff;
-    box-shadow: 0 1px 2px #cdcfd1;
-}
-
-.c-filter-post__title {
-    font-size: 20px;
-    color: #050505;
-}
-
-.c-filter-post__layout-btn {
-    background-color: transparent;
-    border: none;
-    border-bottom: .2rem solid #ffffff;
-    font-size: 15px;
-    padding: .426rem 0;
-    width: 100%;
-    border-top: .2rem solid #ffffff;
-    border-radius: .6rem;
-}
-
-.c-filter-post__layout-btn i {
-    margin-right: .25rem;
 }
 
 .container {
@@ -1125,6 +1229,28 @@ hr {
     margin: 0 1rem;
     position: relative;
     border-radius: .375rem;
+    max-height: 320px;
+    z-index: 1;
+    overflow: auto;
+    /* adds scrollbars */
+}
+
+.c-pop-up__file-info::-webkit-scrollbar {
+    width: .75rem;
+}
+
+.c-pop-up__file-info::-webkit-scrollbar-track:hover {
+    background-color: #f0f1f2;
+}
+
+.c-pop-up__file-info::-webkit-scrollbar-thumb {
+    background-color: #d8d9d9;
+    border-radius: .5rem;
+}
+
+.c-pop-up__file-img {
+    z-index: -1;
+    height: auto;
 }
 
 .c-pop-up__filename {
@@ -1190,12 +1316,14 @@ hr {
     justify-content: space-between;
 }
 
-.h--border-top{
+.h--border-top {
     border-top: 1px solid #dadde1;
 }
+
 .h--border-bottom {
     border-bottom: 1px solid #dadde1;
 }
+
 .l--padding {
     padding: 0 .75rem;
 }
@@ -1267,24 +1395,42 @@ hr {
 }
 
 .h-hide {
-    display: none;
+    display: none !important;
 }
 
 .h--border-radius {
-    border-radius: .5rem;
+    border-radius: .5rem !important;
 }
 
 .h-submit-btn {
-    color: #ffffff;
-    background-color: #18acfd;
-    cursor: pointer;
+    color: #ffffff !important;
+    background-color: #18acfd !important;
+    cursor: pointer !important;
 }
 
 .h-submit-btn:hover {
-    background-color: #18acfd;
-    filter: brightness(95%);
+    background-color: #18acfd !important;
+    filter: brightness(95%) !important;
 }
 
-.h-color{
-    color: #2078f4;
+.h-color {
+    color: #2078f4 !important;
+}
+
+.h-bold {
+    font-weight: bold !important;
+}
+
+.h-autocomplete-active {
+    background-color: #f2f2f2 !important;
+}
+
+.h-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background-color: #e0e0e0ab;
 }
