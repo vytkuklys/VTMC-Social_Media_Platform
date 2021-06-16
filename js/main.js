@@ -10,11 +10,12 @@ const coverUploadPhotoBtn = document.querySelector('.js-cover-upload-btn');
 const profileUploadPhotoBtn = document.getElementById('profileImg');
 const navDropdownBtn = document.querySelector('.js-drop-menu');
 const navSelectBtns = document.querySelectorAll('.js-nav-btn');
-const popUpNavBtns = document.querySelectorAll('.js-popup-nav-btn');
-const popUpOpenBtn = document.querySelector('.js-popup-open-btn');
 const popUpExitBtn = document.querySelectorAll('.js-popup-exit-btn');
 const commentToggleBtn = document.querySelectorAll('.js-comment-toggler');
-const commentInputFieldBtn = document.querySelectorAll('.js-comment-input');
+const commentInput = document.querySelectorAll('.js-comment-input');
+const commentUpdateBtn = document.querySelector('.js-update-submit-btn');
+const commentCreateBtn = document.querySelectorAll('.c-comment__submit-btn');
+const commentDeleteBtn = document.querySelectorAll('.js-delete-btn');
 const postInput = document.querySelector('.js-post-input');
 const postManageBtn = document.querySelectorAll('.js-post-manage-btn');
 const postImageBtn = document.querySelector('.js-post-img-btn');
@@ -25,13 +26,6 @@ const postDeleteBtn = document.querySelectorAll('.js-post-delete-btn');
 const postLikeBtn = document.querySelectorAll('.js-post-like-btn');
 const autocompleteCloseBtn = document.querySelector('.js-close-autocomplete');
 
-const js = document.querySelectorAll('.js-comment');
-js.forEach(jss =>{
-    jss.addEventListener('click', ()=>{
-        commentInputFieldBtn[2].click();
-        console.log(commentInputFieldBtn[2]);
-    })
-})
 
 const uploadCoverPhoto = () => {
     const file = coverUploadPhotoBtn.files;
@@ -234,7 +228,7 @@ const handleCloseBioUpdate = (e) => {
 }
 
 const handleClosePopUp = e => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     const popup = document.querySelectorAll('.c-pop-up__form');
     popup.forEach(form => {
         form.classList.add('h-hide');
@@ -252,7 +246,7 @@ const renderCreatePost = () => {
 
     postSubmitBtn.textContent = "Sukurti įrašą";
     postInput.setAttribute('rows', 4);
-    postInput.textContent = '';
+    postInput.value = '';
     title.textContent = "Sukurti įrašą";
     imgContainer.classList.add('h-hide');
     form.setAttribute('action', './includes/postCreate.inc.php')
@@ -260,7 +254,7 @@ const renderCreatePost = () => {
     renderBlur();
 }
 
-const renderUpdatePost = (text, img, id) =>{
+const renderUpdatePost = (text, img, id) => {
     const popup = document.querySelector('.c-pop-up__create-post');
     const title = document.querySelector('.js-post-title');
     const imgContainer = document.querySelector('.js-file-info')
@@ -272,16 +266,17 @@ const renderUpdatePost = (text, img, id) =>{
     postSubmitBtn.textContent = "Išsaugoti";
     title.textContent = "Redaguoti įrašą";
     postInput.setAttribute('rows', 2);
-    postInput.textContent = text;
+    postInput.value = text;
     form.setAttribute('action', './includes/postUpdate.inc.php');
-    if(img){
+    if (img) {
         imgContainer.classList.remove('h-hide');
         image.setAttribute('src', img)
-    }else{
+    } else {
         imgContainer.classList.add('h-hide');
     }
+    enablePostCreateSubmit(1);
     popup.classList.remove('h-hide');
-} 
+}
 
 const handleOpenUpdatePostPopup = (text, img, id) => {
     renderUpdatePost(text, img, id);
@@ -290,7 +285,7 @@ const handleOpenUpdatePostPopup = (text, img, id) => {
 }
 
 const handleOpenDeletePostPopup = id => {
-    const submitBtn = document.querySelector('.js-delete-submit-btn');
+    const submitBtn = document.querySelector('.js-delete-btn');
     const popup = document.querySelector('.js-delete-popup');
     const title = document.querySelector('.js-delete-title');
     const info = document.querySelector('.js-delete-info');
@@ -310,7 +305,7 @@ const handleOpenDeletePostPopup = id => {
 const handleCommentsMenuToggle = id => {
     const menu = document.querySelector(`[data-id="${id}"]`).parentElement;
     if (menu.classList.contains('h-hide')) {
-        loadComments(event);
+        loadComments(id);
     }
     menu.classList.toggle('h-hide');
 }
@@ -318,7 +313,6 @@ const handleCommentsMenuToggle = id => {
 const handleUserLikedComments = () => {
     const comments = LocalStorage.getLikedComments();
     renderUserLikes(comments);
-    console.log(comments);
 }
 
 const handleLoadedComments = () => {
@@ -329,8 +323,7 @@ const handleLoadedComments = () => {
     handleUserLikedComments();
 }
 
-function loadComments(event) {
-    var id = event.target.parentElement.parentElement.children[1].id
+function loadComments(id) {
     $(`[data-id=${id}]`).load("./includes/commentLoad.inc.php", {
         postId: id
     }, function (responseText, textStatus, XMLHttpRequest) {
@@ -457,13 +450,6 @@ const handleLikedComment = id => {
     });
 }
 
-const handleOpenPopUp = () => {
-    const popup = document.querySelector('.c-pop-up__form');
-    handleAddCover();
-    popup.classList.remove('h-hide');
-    renderBlur();
-}
-
 const togglePostManager = id => {
     if (!id) return;
     hidePopupManagers(id);
@@ -471,10 +457,10 @@ const togglePostManager = id => {
     popup.classList.toggle('h-hide');
 }
 
-const hidePopupManagers = id =>{
+const hidePopupManagers = id => {
     const popups = document.querySelectorAll('.c-popup');
-    popups.forEach(popup =>{
-        if(popup.id !== id){
+    popups.forEach(popup => {
+        if (popup.id !== id) {
             popup.classList.add('h-hide');
         }
     })
@@ -488,7 +474,7 @@ const toggleCommentManager = id => {
 }
 
 const openCommentDeleteForm = id => {
-    const submitBtn = document.querySelector('.js-delete-submit-btn');
+    const submitBtn = document.querySelector('.js-delete-btn');
     const popup = document.querySelector('.js-delete-popup');
     const title = document.querySelector('.js-delete-title');
     const info = document.querySelector('.js-delete-info');
@@ -513,7 +499,6 @@ const openCommentUpdateForm = id => {
 
     textField.textContent = text;
     submitBtn.setAttribute('value', id);
-    console.log(text)
     form.classList.remove('h-hide');
 
     togglePostManager(id);
@@ -532,12 +517,6 @@ const handleAddCover = () => {
 
 const isBtnSelected = id => {
     return document.getElementById(id).classList.contains('h-selected');
-}
-
-const unselectBtn = () => {
-    popUpNavBtns.forEach(btn => {
-        btn.classList.remove('h-selected');
-    })
 }
 
 const handlePopUpNav = id => {
@@ -700,7 +679,6 @@ const addAutocompleteActive = (currentFocus, size) => {
 const handleAutocompleteNav = keyCode => {
     const size = document.querySelectorAll('.c-search__autocomplete-item').length;
     let currentFocus = getCurrentFocus();
-    console.log(currentFocus, 'what');
     if (keyCode == 40) { //arrow down
         currentFocus++;
         addAutocompleteActive(currentFocus, size);
@@ -720,13 +698,11 @@ const closeAutocomplete = () => {
 
 const handleSearchResults = (matches) => {
     const matching = matches.map(match => match.name);
-    console.log(matching)
     const posts = document.querySelectorAll('.c-post__text');
     posts.forEach(post => {
         post.parentElement.classList.add('h-hide');
         const container = document.querySelector(`[data-post="${post.getAttribute('data-msg')}"]`);
         const author = document.querySelector(`[data-author="${post.getAttribute('data-msg')}"]`);
-        console.log(author.textContent)
         if (matching.includes(post.textContent) || matching.includes(author.textContent)) {
             post.parentElement.classList.remove('h-hide')
         }
@@ -737,7 +713,6 @@ const handleSearch = (value, keyCode) => {
     if (!value && value !== 0) return;
     const items = getSearchItems();
     const matches = getMatchingSearchItems(items, value);
-    console.log(keyCode)
     if (keyCode == 40 || keyCode == 38) {
         handleAutocompleteNav(keyCode);
     } else if (keyCode == 13) {
@@ -766,7 +741,6 @@ bioInput.addEventListener('keyup', () => {
 
 postInput.addEventListener('keyup', () => {
     const digit = postInput.value.length;
-    console.log(digit);
     enablePostCreateSubmit(digit);
 });
 
@@ -775,7 +749,7 @@ search.addEventListener('keyup', (e) => {
 
 });
 
-commentInputFieldBtn.forEach(field => {
+commentInput.forEach(field => {
     field.addEventListener('keyup', (event) => {
         handleCommentInput(event);
     });
@@ -788,8 +762,6 @@ bioCancelBtn.addEventListener('click', (e) => handleCloseBioUpdate(e));
 popUpExitBtn.forEach(btn => {
     btn.addEventListener('click', (e) => handleClosePopUp(e));
 });
-
-popUpOpenBtn.addEventListener('click', (e) => handleOpenPopUp(e));
 
 navDropdownBtn.addEventListener('click', (e) => handleDropMenu());
 
@@ -815,7 +787,6 @@ const addCommentManagerEvents = () => {
 
 const addCommentLikeEvents = () => {
     const likeBtn = document.querySelectorAll('.js-comment-like');
-    console.log(likeBtn);
     likeBtn.forEach(btn => {
         if (needsEventListener(btn)) {
             btn.setAttribute('data-event-click', 'is set');
@@ -847,7 +818,6 @@ const addCommentUpdateEvents = () => {
             btn.setAttribute('data-event-click', 'is set');
             btn.addEventListener('click', () => {
                 const id = btn.parentElement.id;
-                console.log('hi');
                 openCommentUpdateForm(id);
             });
         }
@@ -858,12 +828,91 @@ const needsEventListener = (btn) => {
     return btn.getAttribute('data-event-click') == 'is set' ? false : true;
 }
 
+const renderUpdatedComment = (id, value) => {
+    const comment = document.querySelector(`[data-text="${id}"]`);
+    comment.textContent = value;
+    handleClosePopUp();
+}
 
-popUpNavBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        handlePopUpNav(btn.id);
-    });
-});
+const updateComment = (e) => {
+    e.preventDefault();
+    const id = commentUpdateBtn.getAttribute('value');
+    const comment = document.querySelector('.js-comment-update-field').value;
+    const API_ENDPOINT = "./includes/commentUpdate.inc.php";
+    const request = new XMLHttpRequest();
+    const formData = new FormData();
+
+    request.open("POST", API_ENDPOINT, true);
+    request.onreadystatechange = () => {
+        if (request.readyState === 4 && request.status === 200) {
+            renderUpdatedComment(id, comment);
+        }
+    };
+    formData.append("comment", comment);
+    formData.append('id', id);
+    request.send(formData);
+}
+
+const clearCommentInput = (id) => {
+    const input = document.querySelector(`[data-comment-submit=\"${id}\"]`);
+    input.value = '';
+}
+
+const createComment = (id, comment) => {
+    const API_ENDPOINT = "./includes/commentCreate.inc.php";
+    const request = new XMLHttpRequest();
+    const formData = new FormData();
+    
+    request.open("POST", API_ENDPOINT, true);
+    request.onreadystatechange = () => {
+        if (request.readyState === 4 && request.status === 200) {
+            clearCommentInput(id);
+            loadComments(id);
+        }
+    };
+    formData.append("comment", comment);
+    formData.append('id', id);
+    request.send(formData);
+}
+
+const deleteComment = id =>{
+    const comment = document.querySelector(`[data-comment-id="${id}"]`);
+    if(!comment) return;
+    comment.parentElement.removeChild(comment);
+    handleClosePopUp();
+}
+
+const deletePost = id =>{
+    const post = document.querySelector(`[data-post="${id}"]`);
+    if(!post) return;
+    post.parentElement.removeChild(post);
+    handleClosePopUp();
+}
+
+const deleteContent = (API_ENDPOINT, id, callback) => {
+    const request = new XMLHttpRequest();
+    const formData = new FormData();
+    
+    request.open("POST", API_ENDPOINT, true);
+    request.onreadystatechange = () => {
+        if (request.readyState === 4 && request.status === 200) {
+            callback();
+        }
+    };
+    formData.append('id', id);
+    request.send(formData);
+}
+
+
+const handleDeleteContent = (btn) =>{
+    const API_ENDPOINT = btn.parentElement.getAttribute('action');
+    const id = btn.value;
+    if(API_ENDPOINT === "./includes/postDelete.inc.php"){
+        deleteContent(API_ENDPOINT, id, ()=>{deletePost(id)});
+    }else if(API_ENDPOINT === "./includes/commentDelete.inc.php"){
+        deleteContent(API_ENDPOINT, id, ()=>{deleteComment(id)});
+    }
+}
 
 navSelectBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -902,19 +951,34 @@ postDeleteBtn.forEach(btn => {
 postLikeBtn.forEach(btn => {
     btn.addEventListener('click', () => {
         const id = btn.parentElement.parentElement.children[1].id;
-        console.log(id);
         handleLikedPost(id);
     });
 });
 
 commentToggleBtn.forEach(btn => {
     btn.addEventListener('click', () => {
-        // const id = btn.parentElement.parentElement.children[1].id;
         const id = btn.getAttribute('data-comments');
-        console.log(id);
         handleCommentsMenuToggle(id);
     });
 });
+
+commentUpdateBtn.addEventListener('click', (e) => updateComment(e));
+
+commentCreateBtn.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const postId = btn.value;
+        const comment = btn.previousElementSibling.value;
+        createComment(postId, comment);
+    });
+});
+
+commentDeleteBtn.forEach(btn =>{
+    btn.addEventListener('click', (e)=>{
+        e.preventDefault();
+        handleDeleteContent(btn);
+    })
+})
 
 const renderUserLikes = ids => {
     ids.forEach(id => {
@@ -929,7 +993,6 @@ const handleActiveUserLikes = json => {
     const postIds = Object.keys(json).map((key) => json[key] == "Posts" ? key : "").filter(key => key);
     const commentIds = Object.keys(json).map((key) => json[key] == "Comments" ? key : "").filter(key => key);
     renderUserLikes(postIds);
-    console.log(postIds)
     // Comments' likes cannot be rendered yet because comment boxes are not rendered at this point. Thus the comments with likes are saved in local storage to be used when comment boxes are being opened
     LocalStorage.addComments(commentIds);
 }
@@ -943,12 +1006,11 @@ const fetchLikes = () => {
             id: id
         },
         dataType: "text",
-        success: function (data) {
-            console.log(data);
+        success: (data) => {
             const json = JSON.parse(data);
             handleActiveUserLikes(json);
         },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        error: (XMLHttpRequest, textStatus, errorThrown) => {
             alert("Status: " + textStatus);
             alert("Error: " + errorThrown);
         }

@@ -14,4 +14,5 @@
         }
         $updatePost = new Post();
         $updatePost->updatePost($msg, $datetime, $photo, $id);
+        header("Location: ../main.php");
     }

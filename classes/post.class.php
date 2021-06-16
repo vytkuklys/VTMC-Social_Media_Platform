@@ -16,10 +16,6 @@
             }
             
             $id = $this->getUniqueId();
-
-            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
-            // $pdo = new PDO($dsn, $this->user, $this->pass);
-            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             try {
                 $sql = "INSERT INTO `pranesimai` VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -37,11 +33,6 @@
                 $_SESSION['message'] = "Post is required to contain message or image";
                 return;
             }
-            
-
-            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
-            // $pdo = new PDO($dsn, $this->user, $this->pass);
-            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             try {
                 if($this->isPhotoUpdated($photo))
                 {
@@ -61,18 +52,36 @@
             }
         }
 
-        public function deletePost($id)
+        public function deletePost($id, $user)
         {
-            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
-            // $pdo = new PDO($dsn, $this->user, $this->pass);
-            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            try {
-                    $sql = "DELETE FROM `pranesimai` WHERE Pranesimo_id =?";
-    
-                    $statement = $this->connect()->prepare($sql);
-                    $statement->execute([$id]);
+            $hostDb = "localhost";
+            $userDb = "root";
+            $passDb = "";
+            $nameDb = "faceboek";
+            try{
+                $dsn = "mysql:host=".$hostDb.";dbname=".$nameDb;
+                $pdo = new PDO($dsn, $userDb, $passDb);
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdo->beginTransaction();
+                try {
+                    $likes = "DELETE FROM `pranesimu_reakcijos` WHERE Pranesimo_id =? AND Vartotojo_id =?";
+                    $comments = "DELETE FROM `komentarai` WHERE Pranesimas =? AND Autorius =?";
+                    $post = "DELETE FROM `pranesimai` WHERE Pranesimo_id =? AND Autorius =?";
+        
+                    $statement = $pdo->prepare($likes);
+                    $statement->execute([$id, $user]);
 
-            } catch (Exception $e) {
+                    $statement2 = $pdo->prepare($comments);
+                    $statement2->execute([$id, $user]);
+
+                    $statement3 = $pdo->prepare($post);
+                    $statement3->execute([$id, $user]);
+                    $pdo->commit();
+                } catch (Exception $e) {
+                    $pdo->rollBack();
+                    $_SESSION['message'] =  "Database connection lost.";
+                }
+            }catch(Exception $e){
                 $_SESSION['message'] =  "Database connection lost.";
             }
         }

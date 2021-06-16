@@ -85,18 +85,33 @@
             }
         }
 
-        public function deleteComment($id)
+        public function deleteComment($id, $user)
         {
-            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
-            // $pdo = new PDO($dsn, $this->user, $this->pass);
-            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            try {
-                    $sql = "DELETE FROM `komentarai` WHERE Komentaro_id =?";
-    
-                    $statement = $this->connect()->prepare($sql);
-                    $statement->execute([$id]);
+            $hostDb = "localhost";
+            $userDb = "root";
+            $passDb = "";
+            $nameDb = "faceboek";
+            try{
+                $dsn = "mysql:host=".$hostDb.";dbname=".$nameDb;
+                $pdo = new PDO($dsn, $userDb, $passDb);
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdo->beginTransaction();
+                try {
+                    $likes = "DELETE FROM `komentaru_reakcijos` WHERE Komentaro_id =? AND Vartotojas =?";
+                    $comment = "DELETE FROM `komentarai` WHERE Komentaro_id =? AND Autorius =?";
+        
+                    $statement = $pdo->prepare($likes);
+                    $statement->execute([$id, $user]);
 
-            } catch (Exception $e) {
+                    $statement2 = $pdo->prepare($comment);
+                    $statement2->execute([$id, $user]);
+
+                    $pdo->commit();
+                } catch (Exception $e) {
+                    $pdo->rollBack();
+                    $_SESSION['message'] =  "Database connection lost.";
+                }
+            }catch(Exception $e){
                 $_SESSION['message'] =  "Database connection lost.";
             }
         }

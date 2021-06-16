@@ -13,4 +13,6 @@
         }
         $create = new Post();
         $create->createPost($msg, $datetime, $userId, $photo);
+        header("Location: ../main.php");
+
     }
