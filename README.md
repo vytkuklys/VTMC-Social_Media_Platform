@@ -33,8 +33,8 @@ Option 2: <br />
 ~ Open Xampp <br />
 ~ Launch project from localhost <br />
  <br />
-Lastly but not leastly, a message of thanks to all the teachers from Vilniaus Technologijų Mokymo Centras for providing sufficient and necessary knowledge,  <br />
-understanding and grasp to build this social media platform. Particularly thankful to Justina Balsė, Greta Grigelionytė and Tomas Tribušauskas who enabled me to  <br />
-build up the fundamental skills of programming and inspired me to become a more fluent medium still between browsers and human beings <br />
+Lastly but not leastly, a message of thanks to all the teachers from Vilniaus Technologijų Mokymo Centras for providing sufficient and necessary knowledge,  
+understanding and grasp to build this social media platform. Particularly thankful to Justina Balsė, Greta Grigelionytė and Tomas Tribušauskas who enabled me to  
+build up the fundamental skills of programming and inspired me to become a more fluent medium still between browsers and human beings 
  <br />
 Special thanks to Mark Z.
