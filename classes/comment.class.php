@@ -9,12 +9,7 @@
             }
             echo "1";
             $id = mt_rand(10000000,99999999);
-
-            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
-            // $pdo = new PDO($dsn, $this->user, $this->pass);
-            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             try {
-                // $sql = "INSERT INTO `pranesimai` VALUES (?, ?, ?, ?, ?, ?)";
                 $sql = "INSERT INTO `komentarai` VALUES (?, ?, ?, ?, ?, ?)";
                 $statement = $this->connect()->prepare($sql);
                 $statement->execute([$id, $comment, $datetime, $datetime, $postId, $userId]);
@@ -31,11 +26,6 @@
                 $_SESSION['message'] = "Post is required to contain message or image";
                 return;
             }
-            
-
-            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
-            // $pdo = new PDO($dsn, $this->user, $this->pass);
-            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             try {
                     $sql = "UPDATE `komentarai` SET `Tekstas`=?,`Redagavimo_data`=? WHERE Komentaro_id =?";
     
@@ -53,9 +43,6 @@
                 return;
             }
             $emoji = 1;
-            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
-            // $pdo = new PDO($dsn, $this->user, $this->pass);
-            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             try {
                 $sql = "INSERT INTO `komentaru_reakcijos` VALUES (?, ?, ?)";
 
@@ -72,9 +59,6 @@
                 $_SESSION['message'] = "Post is required to contain message or image";
                 return;
             }
-            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
-            // $pdo = new PDO($dsn, $this->user, $this->pass);
-            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             try {
                 $sql = "DELETE FROM `komentaru_reakcijos` WHERE Komentaro_id =? AND Vartotojas =?";
                 $statement = $this->connect()->prepare($sql);

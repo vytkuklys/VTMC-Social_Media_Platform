@@ -24,13 +24,13 @@
    if(isset($result[0]['Profilio_nuotrauka']) && !empty($result[0]['Profilio_nuotrauka'])){
        $profilePhoto = "./uploads/".$result[0]['Profilio_nuotrauka'];
     }else{
-       $profilePhoto = "./images/male.jpg";
+       $profilePhoto = "./images/panda.png";
    }
    $fullname = $_SESSION['firstname']." ".$_SESSION['lastname'];
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -42,7 +42,7 @@
     <script src="https://kit.fontawesome.com/85a9462cb0.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <link rel="stylesheet" href="css/style.css?rel=415">
+    <link rel="stylesheet" href="css/style.css?rel=145">
 </head>
 
 <body>
@@ -52,24 +52,21 @@
                 <div class="c-search__logo">
                     <i class="fab fa-facebook"></i>
                 </div>
-                <label for="searchPosts" class="c-search__input">
+                <button class="c-search__open-btn c-btn js-open-search-btn" aria-label="Input Open"><i class="fas fa-search"></i></button>
+                <label for="searchPosts" class="c-search__input h-hide-mobile">
                     <div class="c-search__input-icon">
                         <i class="fas fa-search"></i>
                     </div>
-                    <input type="text" aria-label="Post Search" placeholder="Search Faceboek" aria-hidden="false"
+                    <input type="text" aria-label="Post Search" placeholder="Search Faceboek" aria-hidden="false" id="searchPosts"
                         name="search" id="searchPosts" class="c-search__input-field js-search" autocomplete="off">
                 </label>
-                <div class="js-autocomplete">
-                    <!-- <p class="c-search__autocomplete-item"><span class="c-search__icon"></span><span>Lucas Enco</p>
-                    <p class="c-search__autocomplete-item hs-autocomplete-active"><span class="c-search__icon"></span>Simonas Donskovas</p>
-                    <p class="c-search__autocomplete-item"><span class="c-search__icon"></span>Search for&nbsp;<span class="h-bold js-search-value">this</span></p> -->
-                </div>
+                <div class="js-autocomplete"></div>
                 <button class="js-close-autocomplete h-hide c-search__close-btn c-btn" aria-label="hidden"><i class="fas fa-arrow-left"></i></button>
             </div>
         </div>
         <div class="c-controls l-controls--flex" aria-label="Account Controls and Settings">
             <div class="c-controls__account l-controls--margin">
-            <img src="<?php echo $profilePhoto; ?>" onerror=\"this.onerror=null; this.src='./images/male.jpg'\" alt="Profile photo" class="c-controls__img">
+            <img src="<?php echo $profilePhoto; ?>" onerror="this.onerror=null; this.src='./images/panda.png'" alt="Profile photo" class="c-controls__img">
                 <p><?php echo $_SESSION['firstname'];?></p>
             </div>
             <form method="POST">
@@ -81,8 +78,8 @@
     </header>
     <main>
         <div class="c-hero">
-            <div class="c-hero__cover-img js-cover-btn" style="<?php echo !empty($result[0]['Virselio_nuotrauka']) ? "background-image: url('./uploads/".$result[0]['Virselio_nuotrauka']."');" : "";?>" data-bg="<?php echo !empty($result[0]['Virselio_nuotrauka']) ? "".$result[0]['Virselio_nuotrauka']."" : "0";?>">
-                <div class="c-hero__profile-img js-profle-img" style="<?php echo "background-image: url('".$profilePhoto."');";?>">
+            <div class="c-hero__cover-img js-cover-btn" style="<?php echo !empty($result[0]['Virselio_nuotrauka']) ? "background-image: url('./uploads/".$result[0]['Virselio_nuotrauka']."');" : "background-image: url('./images/panda.png')";?>" data-bg="<?php echo !empty($result[0]['Virselio_nuotrauka']) ? "".$result[0]['Virselio_nuotrauka']."" : "0";?>">
+                <div class="c-hero__profile-img js-profle-img" style="<?php echo "background-image: url('".$profilePhoto."'), url('./images/panda.png');";?>" data-profile-img="<?php echo $profilePhoto === "./images/panda.png" ? "0" : $profilePhoto;?>">
                     <label class="c-hero__profile-btn" for="profileImg">
                         <i class="fas fa-camera"></i>
                         <input type="file" id="profileImg" name="file" accept=".jpg, .jpeg, .png">
@@ -99,8 +96,11 @@
             <div aria-label="User Bio" class="c-hero__bio">
                 <h1 class="c-hero__fullname"><?php echo $fullname;?></h1>
                 <div class="c-hero__bio-controls">
-                    <button aria-hidden="false" class="c-hero__bio-show h-show js-bio-show">Pridėti biografiją</button>
-                    <form aria-hidden="true" class="c-hero__bio-form h-hide js-bio-form" method="POST">
+                    <p class="c-hero__bio-text js-bio-text">
+                        <?php echo !empty($result[0]['Bio']) ? $result[0]['Bio'] : "";?>
+                    </p>
+                    <button aria-hidden="false" class="c-hero__bio-show h-show js-bio-show"><?php echo !empty($result[0]['Bio']) ? "Redaguoti" : "Pridėti biografiją";?></button>
+                    <form aria-hidden="true" class="c-hero__bio-form h-hide js-bio-form" method="POST" action="./includes/userBioUpdate.inc.php">
                         <textarea class="c-hero__bio-input js-bio-input" maxlength="101" name="bio"
                             aria-label="Enter Bio Text" cols="32" rows="3" placeholder="Apibūdinkite save" required></textarea>
                         <p class="c-hero__bio-info"><span class="c-hero__bio-digit js-digits-quota">101</span>
@@ -137,21 +137,21 @@
                 </div>
             </div>
             <div class="c-nav__controls">
-                <button class="c-btn h-notallowed"><i class="fas fa-pen"></i> Redaguoti profilį</button>
-                <button class="c-btn h-notallowed"><i class="fas fa-eye"></i></button>
-                <button class="c-btn h-notallowed"><i class="fas fa-search"></i></button>
-                <button class="c-btn h-notallowed"><i class="fas fa-ellipsis-h"></i></button>
+                <button class="c-btn h-notallowed h-mobile-hide" aria-label="Update Profile"><i class="fas fa-pen"></i> Redaguoti profilį</button>
+                <button class="c-btn h-notallowed h-mobile-hide" aria-label="Public View"><i class="fas fa-eye"></i></button>
+                <button class="c-btn h-notallowed" aria-label="Search Profile"><i class="fas fa-search"></i></button>
+                <button class="c-btn h-notallowed" aria-label="More Options"><i class="fas fa-ellipsis-h"></i></button>
             </div>
         </nav>
         <div class="h-separator--shadow"></div>
         <div class="container">
             <div class="c-create-post">
                 <div class="l--flex">
-                    <img class="c-profile-img" src="<?php echo $profilePhoto;?>" alt="User Profile Image">
+                    <img class="c-profile-img" src="<?php echo $profilePhoto;?>" alt="User Profile Image" onerror="this.onerror=null; this.src='./images/panda.png'">
                     <button class="c-create-post__open-btn js-open-create-post-btn">Ką galvojate?</button>
                 </div>
                 <div class="c-create-post__btns">
-                    <button class="c-create-post__btn js-open-create-post-btn h-notallowed"><i class="fas fa-video"></i> Tiesioginė vaizdo
+                    <button class="c-create-post__btn js-open-create-post-btn h-notallowed h-mobile-font"><i class="fas fa-video"></i> Tiesioginė vaizdo
                         transliacija</button>
                     <button class="c-create-post__btn js-open-create-post-btn"><i class="far fa-images"></i> Photo/Video</button>
                 </div>
@@ -185,9 +185,9 @@
                                 vartotojai v
                                 ON v.Vartotojo_id = p.Autorius
                                 ORDER BY p.Redagavimo_data DESC";
-                    $resulta = $connectM->prepare($sql);
-                    $resulta->execute();
-                    while ($row = $resulta->fetch(PDO::FETCH_ASSOC)) {
+                    $result = $connectM->prepare($sql);
+                    $result->execute();
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         $datetime = explode(' ', $row['Redagavimo_data']);
                         if($row['Total_comments'] > 0){
                             $hideComments = "";
@@ -204,7 +204,7 @@
                         if(isset($row['Profilio_nuotrauka']) && !empty($row['Profilio_nuotrauka'])){
                             $userPhoto = "./uploads/".$row['Profilio_nuotrauka'];
                         }else{
-                            $userPhoto = "./images/male.jpg";
+                            $userPhoto = "./images/panda.png";
                         }
                         if($row['Vartotojo_id'] === $_SESSION['userId']){
                             $authorized = "";
@@ -216,12 +216,12 @@
                         echo 
                         "<div class=\"c-post\" data-post=\"".$row['Pranesimo_id']."\">
                             <div class=\"l--flex l--center-justify\">
-                                <img class=\"c-profile-img\" src=\"".$userPhoto."\" onerror=\"this.onerror=null; this.src='./images/male.jpg'\" onerror=\"this.onerror=null; this.src='./images/male.jpg'\" alt=\"User Profile Image\">
+                                <img class=\"c-profile-img\" src=\"".$userPhoto."\" onerror=\"this.onerror=null; this.src='./images/panda.png'\" onerror=\"this.onerror=null; this.src='./images/panda.png'\" alt=\"User Profile Image\">
                                 <div class=\"c-post__details\">
                                     <p class=\"c-post__author\" data-author=\"".$row['Pranesimo_id']."\">".$row['Vardas']." ".$row['Pavarde']."</p>
                                     <p class=\"c-post__datetime\">".$date.", ".$time."</p>
                                 </div>
-                                <button class=\"c-btn c-post__more-btn ".$authorized." js-post-manage-btn\"><i
+                                <button class=\"c-btn c-post__more-btn ".$authorized." js-post-manage-btn\" aria-label=\"Open Menu\"><i
                                         class=\"fas fa-ellipsis-h\"></i></button>
                             </div>
                             <div class=\"c-post__popup c-popup h-hide\" id=\"".$row['Pranesimo_id']."\">
@@ -233,7 +233,7 @@
                         
                         echo 
                             empty($row['Nuotrauka']) ? "" :
-                            "<img src=\"./uploads/".$row['Nuotrauka']."\" onerror=\"this.onerror=null; this.src='./images/undraw_page_not_found_su7k.svg'\" class=\"c-post__img\" alt=\"\">";
+                            "<img src=\"./uploads/".$row['Nuotrauka']."\" data-img-path=\"../uploads/".$row['Nuotrauka']."\" onerror=\"this.onerror=null; this.src='./images/undraw_page_not_found_su7k.svg'\" class=\"c-post__img\" alt=\"\" data-img=\"".$row['Pranesimo_id']."\">";
                         echo
                             "<div class=\"c-reactions__wrapper\" data-reaction=\"".$row['Pranesimo_id']."\">
                                 <p class=\"c-likes ".$hideLikes."\"><span class=\"c-likes__icon\"><i class=\"fas fa-thumbs-up\"></i></span><span class=\"c-likes__counter\">".$row['Total_likes']."</span></p>
@@ -247,7 +247,7 @@
                             <div class=\"c-comment l--padding-top ".$showComments."\">
                                 <ul class=\"c-comment__items\" data-id=\"".$row['Pranesimo_id']."\"></ul>
                                 <div class=\" l--flex l--padding-bottom\">
-                                    <img class=\"c-post__comment-img\" src=\"".$profilePhoto."\" this.src='./images/male.jpg'\" onerror=\"this.onerror=null; this.src='./images/male.jpg'\" alt=\"User Profile Image\">
+                                    <img class=\"c-post__comment-img\" src=\"".$profilePhoto."\" this.src='./images/panda.png'\" onerror=\"this.onerror=null; this.src='./images/panda.png'\" alt=\"User Profile Image\">
                                     <form class=\"c-comment__form\" method=\"POST\" action=\"./includes/commentCreate.inc.php\">
                                         <input type=\"text\" name=\"comment\" class=\"c-post__comment-btn js-comment-input\"
                                         placeholder=\"Parašykite komentarą...\" required data-comment-submit=\"".$row['Pranesimo_id']."\">
@@ -296,7 +296,7 @@
                 <button class="c-pop-up__exit-btn js-popup-exit-btn"><i class="fas fa-times"></i></button>
             </div>
             <div class="l--flex l--margin">
-                <img class="c-profile-img" src="<?php echo $profilePhoto;?>" alt="User Profile Image">
+                <img class="c-profile-img" src="<?php echo $profilePhoto;?>" onerror="this.onerror=null; this.src='./images/panda.png'" alt="User Profile Image">
                 <p class="c-pop-up__fullname"><?php echo $fullname;?></p>
             </div>
             <form method="POST" action="./includes/postCreate.inc.php" enctype="multipart/form-data" class="js-popup-form">
@@ -309,7 +309,7 @@
                 <div class="c-pop-up__extras">
                     <p class="c-pop-up__subtitle">Pridėkite prie savo įrašą</p>
                     <label for="postImg" class="c-pop-up__img-btn">
-                        <input type="file" id="postImg" class="js-post-img-btn" name="file" accept=".jpg, .jpeg, .png">
+                        <input type="file" id="postImg" class="js-post-img-btn" name="file" accept=".jpg, .jpeg, .png" aria-label="Select An Image">
                         <i class="far fa-images"></i>
                     </label>
                 </div>
@@ -340,7 +340,7 @@
             </form>
         </div>
     </main>
-    <script type="module" src="./js/main.js?rel=215" async defer></script>
+    <script type="module" src="./js/main.js?rel=154" async defer></script>
 </body>
 
 </html>

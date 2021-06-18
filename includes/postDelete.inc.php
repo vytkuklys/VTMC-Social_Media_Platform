@@ -6,5 +6,8 @@
         $id = $_POST['id'];
         $user = $_SESSION['userId'];
         $deletePost = new Post();
-        $deletePost->deletePost($id, $user);
+        $success = $deletePost->deletePost($id, $user);
+        if($success === true && $_POST['previousPhoto'] !== 0 && file_exists($_POST['previousPhoto'])){
+            unlink($_POST['previousPhoto']);
+        }
     }

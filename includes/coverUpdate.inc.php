@@ -8,5 +8,8 @@
         $userId = $_SESSION['userId'];
         
         $user = new User();
-        $user->updateCoverImg($photo, $userId);
+        $success = $user->updateCoverImg($photo, $userId);
+        if($success === true && $_POST['previousPhoto'] !== 0 && file_exists($_POST['previousPhoto'])){
+            unlink($_POST['previousPhoto']);
+        }
     }

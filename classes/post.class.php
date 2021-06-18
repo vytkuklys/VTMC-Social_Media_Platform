@@ -31,7 +31,7 @@
         {
             if (empty($msg) && empty($photo)) {
                 $_SESSION['message'] = "Post is required to contain message or image";
-                return;
+                return false;
             }
             try {
                 if($this->isPhotoUpdated($photo))
@@ -46,9 +46,10 @@
                     $statement = $this->connect()->prepare($sql);
                     $statement->execute([$msg, $datetime, $id]);
                 }
-
+                return true;
             } catch (Exception $e) {
                 $_SESSION['message'] =  "Database connection lost.";
+                return false;
             }
         }
 
@@ -64,25 +65,29 @@
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $pdo->beginTransaction();
                 try {
-                    $likes = "DELETE FROM `pranesimu_reakcijos` WHERE Pranesimo_id =? AND Vartotojo_id =?";
-                    $comments = "DELETE FROM `komentarai` WHERE Pranesimas =? AND Autorius =?";
+                   
+                    $likes = "DELETE FROM `pranesimu_reakcijos` WHERE Pranesimo_id =?";
+                    $comments = "DELETE FROM `komentarai` WHERE Pranesimas =?";
                     $post = "DELETE FROM `pranesimai` WHERE Pranesimo_id =? AND Autorius =?";
         
                     $statement = $pdo->prepare($likes);
-                    $statement->execute([$id, $user]);
+                    $statement->execute([$id]);
 
                     $statement2 = $pdo->prepare($comments);
-                    $statement2->execute([$id, $user]);
+                    $statement2->execute([$id]);
 
                     $statement3 = $pdo->prepare($post);
                     $statement3->execute([$id, $user]);
                     $pdo->commit();
+                    return true;
                 } catch (Exception $e) {
                     $pdo->rollBack();
                     $_SESSION['message'] =  "Database connection lost.";
+                    return false;
                 }
             }catch(Exception $e){
                 $_SESSION['message'] =  "Database connection lost.";
+                return false;
             }
         }
 

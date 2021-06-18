@@ -5,21 +5,17 @@
         {
             if (empty($userId) || empty($photo)) {
                 $_SESSION['message'] = "Error occurred when uploading your image";
-                return;
+                return false;
             }
-            
-
-            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
-            // $pdo = new PDO($dsn, $this->user, $this->pass);
-            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             try {
                 $sql = "UPDATE `vartotojai` SET `Virselio_nuotrauka`=? WHERE Vartotojo_id = ?";
 
                 $statement = $this->connect()->prepare($sql);
                 $statement->execute([$photo, $userId]);  
-
+                return true;
             } catch (Exception $e) {
                 $_SESSION['message'] =  "Database connection lost.";
+                return false;
             }
         }
 
@@ -27,18 +23,31 @@
         {
             if (empty($userId) || empty($photo)) {
                 $_SESSION['message'] = "Error occurred when uploading your image";
-                return;
+                return false;
             }
-            
-
-            // $dsn = "mysql:host=".$this->host.";dbname=".$this->dbName;
-            // $pdo = new PDO($dsn, $this->user, $this->pass);
-            // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             try {
-                $sql = "UPDATE `vartotojai` SET `Nuotrauka`=? WHERE Vartotojo_id = ?";
+                $sql = "UPDATE `vartotojai` SET `Profilio_nuotrauka`=? WHERE Vartotojo_id = ?";
 
                 $statement = $this->connect()->prepare($sql);
-                $statement->execute([$photo, $userId]);  
+                $statement->execute([$photo, $userId]);
+                return true;
+
+            } catch (Exception $e) {
+                $_SESSION['message'] =  "Database connection lost.";
+                return false;
+            }
+        }
+
+        public function updateBio($bio, $userId)
+        {
+            if (empty($userId) || empty($bio)) {
+                $_SESSION['message'] = "Error occurred when uploading your image";
+                return;
+            }
+            try {
+                $sql = "UPDATE `vartotojai` SET `Bio`=? WHERE Vartotojo_id = ?";
+                $statement = $this->connect()->prepare($sql);
+                $statement->execute([$bio, $userId]);
 
             } catch (Exception $e) {
                 $_SESSION['message'] =  "Database connection lost.";

@@ -2,17 +2,20 @@
     session_start();
     require_once './auto-loader.inc.php';
     
-    if(isset($_POST['submit']) && (isset($_POST['postMsg']) || isset($_POST['file']))){
+    if(isset($_POST['id']) && (isset($_POST['msg']) || isset($_POST['file']))){
         $datetime = date("Y-m-d H:i:s");
         $photo = 0;
-        $userId = $_SESSION["userId"];
-        $msg = $_POST['postMsg'];
-        $id = $_POST['submit'];
+        $msg = $_POST['msg'];
+        $id = $_POST['id'];
         if(!empty($_FILES['file']['name'])){
             $newImg = new Image();
             $photo = $newImg->uploadImg($_FILES);
         }
+        echo $msg;
         $updatePost = new Post();
-        $updatePost->updatePost($msg, $datetime, $photo, $id);
+        $success = $updatePost->updatePost($msg, $datetime, $photo, $id);
+        if($success === true && $_POST['previousPhoto'] !== 0 && file_exists($_POST['previousPhoto'])){
+            unlink($_POST['previousPhoto']);
+        }
         header("Location: ../main.php");
     }

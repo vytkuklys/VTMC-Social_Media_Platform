@@ -34,7 +34,7 @@ try {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -51,16 +51,10 @@ try {
                 padding: 20px 4px 20px 0;
                 display: flex;
                 justify-content: space-between;
-                /* align-items: center; */
                 width: 980px;
                 font-family: Helvetica, sans-serif;
             }
-            /* media only screen and (max-width: 1075px)
-._8esk {
-    height: 496px;
-    margin: 0 40px;
-    width: auto;
-} */
+          
         </style>
     </head>
     <body>
@@ -75,9 +69,9 @@ try {
                     <input class="c-login-form__input" type="password" name="password" placeholder="Slaptažodis" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required><br>
                     <input type="submit" name="login" value="Prisijungti" class="c-login-form__input c-login-form__submit"><br>
                 </form>
-                <a href="" class="c-login__link c-login__password-reset">Pamiršote slaptažodį?</a>
+                <a href="" class="c-login__link c-login__password-reset h-notallowed">Pamiršote slaptažodį?</a>
                 <div class="c-login__separator"></div>
-                <a href="" class="c-login__link c-login__register">Kurti naują paskyrą</a>
+                <a href="" class="c-login__link c-login__register h-notallowed">Kurti naują paskyrą</a>
             </div>
         </main>
         <script src="" async defer></script>

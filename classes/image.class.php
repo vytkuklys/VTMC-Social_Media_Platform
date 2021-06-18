@@ -20,7 +20,6 @@ class Image{
                     $fileNameNew = uniqid('', true).$fileActualName.".".$fileActualExt;
                     $fileDestination = '../uploads/'.$fileNameNew;
                     move_uploaded_file($fileTmpName, $fileDestination);
-                    // header("Location: upload.php?uploadsuccess");
                     return $fileNameNew;
                 }else{
                     echo "Your file is too big!";

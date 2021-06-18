@@ -15,11 +15,11 @@
                 vartotojai v
                 ON v.Vartotojo_id = k.Autorius
                 WHERE k.Pranesimas = ".$postId."
-                ORDER BY k.Redagavimo_data DESC";
+                ORDER BY k.Redagavimo_data ASC";
         $result = $connectM->prepare($sql);
         $result->execute();
         $hideLikes = "h-hide";
-        $photo = "./images/male.php";
+        $photo = "./images/panda.png";
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             if($row['Total_likes'] > 0){
                 $hideLikes = "";
@@ -29,7 +29,7 @@
             if(!empty($row['Profilio_nuotrauka'])){
                 $photo = "./uploads/".$row['Profilio_nuotrauka'];
             }else{
-                $photo = "./images/male.php";
+                $photo = "./images/panda.png";
             }
             if($row['Vartotojo_id'] === $_SESSION['userId']){
                 $authorised = "";
@@ -38,7 +38,7 @@
             }
             echo "
             <li class=\"l--flex\" data-comment-id=\"".$row['Komentaro_id']."\">
-                <img class=\"c-post__comment-img c-comment__img\" src=\"".$photo."\" onerror=\"this.onerror=null; this.src='./images/male.jpg'\" alt=\"User Profile Image\">
+                <img class=\"c-post__comment-img c-comment__img\" src=\"".$photo."\" onerror=\"this.onerror=null; this.src='./images/panda.png'\" alt=\"User Profile Image\">
                 <div class=\"c-comment__wrapper l--flex\">
                     <div class=\"c-comment__details\">
                         <p class=\"c-comment__author\">".$row['Vardas']." ".$row['Pavarde']."</p>

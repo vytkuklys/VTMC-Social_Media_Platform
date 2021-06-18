@@ -2,9 +2,11 @@
 import LocalStorage from './LocalStorage.js';
 
 const search = document.querySelector('.js-search');
+const searchBtn = document.querySelector('.js-open-search-btn');
 const bioInput = document.querySelector('.js-bio-input');
 const bioUpdateBtn = document.querySelector('.js-bio-show');
 const bioCancelBtn = document.querySelector('.js-bio-hide');
+const bioSubmitBtn = document.querySelector('.js-bio-submit');
 const coverToggleMenuBtn = document.querySelector('.js-cover-btn');
 const coverUploadPhotoBtn = document.querySelector('.js-cover-upload-btn');
 const profileUploadPhotoBtn = document.getElementById('profileImg');
@@ -24,53 +26,79 @@ const postCancelImgBtn = document.querySelector('.js-post-cancel-img-btn');
 const postUpdateBtn = document.querySelectorAll('.js-post-update-btn');
 const postDeleteBtn = document.querySelectorAll('.js-post-delete-btn');
 const postLikeBtn = document.querySelectorAll('.js-post-like-btn');
+const postSubmitBtn = document.querySelector('.js-post-submit');
 const autocompleteCloseBtn = document.querySelector('.js-close-autocomplete');
 
 
-const uploadCoverPhoto = () => {
-    const file = coverUploadPhotoBtn.files;
-    if (file) {
-        const fileReader = new FileReader();
-
-        fileReader.onload = function (event) {
-            coverToggleMenuBtn.style.backgroundImage = `url(${event.target.result})`;
-            renderValidationForm();
-        }
-        fileReader.readAsDataURL(file[0]);
-    }
+const renderCoverPhoto = (link) => {
+    coverToggleMenuBtn.style.backgroundImage = `url(${link})`;
+    renderValidationForm();
     handleAddCover();
 }
 
-const uploadProfilePhoto = () => {
-    const file = profileUploadPhotoBtn.files;
+const renderProfilePhoto = (link) => {
+    const profile = document.querySelector('.js-profle-img');
+
+    profile.style.backgroundImage = `url(${link})`;
+    handleUploadProfilePhoto();
+}
+
+const renderPostPhoto = (link, id) => {
+    const profile = document.querySelector(`[data-img="${id}"]`);
+
+    profile.setAttribute('src', `${link}`);
+}
+
+const renderPhoto = (file, callback, id = 0) => {
     if (file) {
         const fileReader = new FileReader();
-        const profile = document.querySelector('.js-profle-img');
         fileReader.onload = function (event) {
-            profile.style.backgroundImage = `url(${event.target.result})`;
-            saveProfilePhoto();
+            callback(event.target.result, id);
         }
-        fileReader.readAsDataURL(file[0]);
+        fileReader.readAsDataURL(file);
     }
 }
 
-const saveProfilePhoto = () => {
-    const files = profileUploadPhotoBtn.files[0];
-    const API_ENDPOINT = "./includes/profileUpdate.inc.php";
+const uploadPhoto = (file, API_ENDPOINT, callback = () => {}, previousPhotoPath = 0) => {
     const request = new XMLHttpRequest();
     const formData = new FormData();
-
     request.open("POST", API_ENDPOINT, true);
     request.onreadystatechange = () => {
         if (request.readyState === 4 && request.status === 200) {
-
+            callback();
         }
     };
-    formData.append("file", files);
+    formData.append("previousPhoto", previousPhotoPath);
+    formData.append("file", file);
     formData.append('submit', true);
     request.send(formData);
 }
 
+const handleUploadProfilePhoto = () => {
+    const profileImage = document.querySelector("[data-profile-img]").getAttribute("data-profile-img");
+    const file = profileUploadPhotoBtn.files[0];
+    const API_ENDPOINT = "./includes/profileUpdate.inc.php";
+
+    if (profileImage) {
+        const previousPhotoPath = `.${profileImage}`;
+        uploadPhoto(file, API_ENDPOINT, () => {}, previousPhotoPath);
+    } else {
+        uploadPhoto(file, API_ENDPOINT);
+    }
+}
+
+const handleUploadCoverPhoto = () => {
+    const bgImage = document.querySelector("[data-bg]").getAttribute("data-bg")
+    const file = coverUploadPhotoBtn.files[0];
+    const API_ENDPOINT = "./includes/coverUpdate.inc.php";
+
+    if (bgImage) {
+        const previousPhotoPath = `../uploads/${bgImage}`;
+        uploadPhoto(file, API_ENDPOINT, closeValidationForm, previousPhotoPath);
+    } else {
+        uploadPhoto(file, API_ENDPOINT, closeValidationForm);
+    }
+}
 const isFormRendered = () => {
     const form = document.querySelector('.c-validation');
     return form == null ? false : true;
@@ -121,26 +149,8 @@ const closeValidationForm = () => {
 
 const addClickEvents = (saveBtn, cancelBtn) => {
     cancelBtn.addEventListener('click', handleCancelCoverImage);
-    saveBtn.addEventListener('click', handleSaveCoverImage);
+    saveBtn.addEventListener('click', handleUploadCoverPhoto);
 }
-
-const handleSaveCoverImage = () => {
-    const files = coverUploadPhotoBtn.files[0];
-    const API_ENDPOINT = "./includes/coverUpdate.inc.php";
-    const request = new XMLHttpRequest();
-    const formData = new FormData();
-
-    request.open("POST", API_ENDPOINT, true);
-    request.onreadystatechange = () => {
-        if (request.readyState === 4 && request.status === 200) {
-            closeValidationForm();
-        }
-    };
-    formData.append("file", files);
-    formData.append('submit', true);
-    request.send(formData);
-}
-
 
 const handleBioInput = digit => {
     const bioRemainingDigits = document.querySelector('.js-digits-quota');
@@ -168,7 +178,7 @@ const isEmpty = digit => {
 }
 
 const enablePostCreateSubmit = (digit) => {
-    const postSubmitBtn = document.querySelector('.js-post-submit');
+    // const postSubmitBtn = document.querySelector('.js-post-submit');
     if (isEmpty(digit)) {
         postSubmitBtn.classList.remove('h-submit-btn')
         return;
@@ -211,6 +221,13 @@ const disableBioSubmit = () => {
 
 const handleShowBioUpdate = () => {
     const form = document.querySelector('.js-bio-form');
+    const bio = document.querySelector('.js-bio-text');
+
+    if (bio) {
+        bio.classList.add('h-hide');
+        bioInput.value = bio.textContent.trim();
+        handleBioInput(bio.textContent.trim().length);
+    }
     form.setAttribute('aria-hidden', 'false');
     bioUpdateBtn.setAttribute('aria-hidden', 'true');
     form.classList.remove('h-hide');
@@ -218,13 +235,34 @@ const handleShowBioUpdate = () => {
 }
 
 const handleCloseBioUpdate = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     const form = document.querySelector('.js-bio-form');
+    const bio = document.querySelector('.c-hero__bio-text');
+
+    if (bio) {
+        bio.classList.remove('h-hide');
+    }
     bioInput.value = '';
     form.classList.add('h-hide');
     bioUpdateBtn.classList.add('h-show');
     handleBioInput(0);
     disableBioSubmit();
+}
+
+const renderBio = value => {
+    const bio = document.querySelector('.js-bio-text');
+    bio.textContent = value;
+}
+
+const handleBioSubmit = async () => {
+    const value = bioInput.value;
+    const API_ENDPOINT = './includes/userBioUpdate.inc.php';
+    const id = 0;
+
+    await uploadContent(id, value, API_ENDPOINT, () => {
+        renderBio(value)
+    });
+    handleCloseBioUpdate();
 }
 
 const handleClosePopUp = e => {
@@ -240,7 +278,7 @@ const renderCreatePost = () => {
     const popup = document.querySelector('.c-pop-up__create-post');
     const title = document.querySelector('.js-post-title');
     const form = document.querySelector('.js-popup-form');
-    const postSubmitBtn = document.querySelector('.js-post-submit');
+    // const postSubmitBtn = document.querySelector('.js-post-submit');
     const imgContainer = document.querySelector('.js-file-info')
 
 
@@ -260,7 +298,7 @@ const renderUpdatePost = (text, img, id) => {
     const imgContainer = document.querySelector('.js-file-info')
     const image = document.querySelector('.js-popup-img');
     const form = document.querySelector('.js-popup-form');
-    const postSubmitBtn = document.querySelector('.js-post-submit');
+    // const postSubmitBtn = document.querySelector('.js-post-submit');
 
     postSubmitBtn.setAttribute('value', id);
     postSubmitBtn.textContent = "Išsaugoti";
@@ -335,7 +373,7 @@ function loadComments(id) {
 }
 
 const unlikePost = id => {
-    $(`[data-id=${id}]`).load("./includes/postUnlike.inc.php", {
+    $(document).load("./includes/postUnlike.inc.php", {
         postId: id
     }, function (responseText, textStatus, XMLHttpRequest) {
         if (textStatus == "success") {
@@ -357,7 +395,7 @@ const handleLikedPost = id => {
         unlikePost(id);
         return;
     }
-    $(`[data-id=${id}]`).load("./includes/postLike.inc.php", {
+    $(document).load("./includes/postLike.inc.php", {
         postId: id
     }, function (responseText, textStatus, XMLHttpRequest) {
         if (textStatus == "success") {
@@ -598,7 +636,7 @@ const getLastAutocompleteItem = value => {
     leftText.textContent = value;
     leftText.classList.add('h-bold');
     icon.classList.add('c-search__icon');
-    lastItem.classList.add('c-search__autocomplete-item');
+    lastItem.classList.add('c-search__autocomplete-item', 'js-last-item');
     lastItem.append(icon, rightText, leftText);
     return lastItem;
 }
@@ -613,6 +651,27 @@ const renderAutocomleteCloseBtn = () => {
     autocompleteCloseBtn.classList.remove('h-hide');
 }
 
+const handleClickSearchItem = item => {
+    let value;
+    const items = getSearchItems();
+    if (item.classList.contains('js-last-item')) {
+        value = item.children[2].textContent;
+    } else {
+        value = item.textContent;
+    }
+    const matches = getMatchingSearchItems(items, value.split('...')[0]);
+    handleSearchResults(matches);
+}
+
+const addAutocompleteEvents = () => {
+    const items = document.querySelectorAll('.c-search__autocomplete-item');
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            handleClickSearchItem(item);
+        });
+    })
+}
+
 const renderAutocomplete = (matches, value) => {
     const container = document.querySelector('.js-autocomplete');
     const autocomplete = document.createElement('div');
@@ -623,20 +682,23 @@ const renderAutocomplete = (matches, value) => {
         const leftText = document.createElement('span');
         const fullText = document.createElement('p');
         const icon = document.createElement('span');
-
-        if (isMatchingStart(item.index)) {
-            rightText.textContent = item.name.substring(0, value.length);
-            rightText.classList.add('h-bold')
-            leftText.textContent = item.name.substring(value.length, item.name.length);
-        } else if (isMatchingEnd(item.name, item.index, value.length)) {
-            rightText.textContent = item.name.substring(0, item.index);
-            leftText.textContent = item.name.substring(item.index, item.name.length);
-            leftText.classList.add('h-bold')
+        if (item.name.length > 30) {
+            rightText.textContent = `${item.name.substring(0, 30)}...`
         } else {
-            rightText.textContent = item.name.substring(0, item.index);
-            middleText.textContent = item.name.substring(item.index, item.index + value.length);
-            middleText.classList.add('h-bold')
-            leftText.textContent = item.name.substring(item.index + value.length, item.name.length);
+            if (isMatchingStart(item.index)) {
+                rightText.textContent = item.name.substring(0, value.length);
+                rightText.classList.add('h-bold')
+                leftText.textContent = item.name.substring(value.length, item.name.length);
+            } else if (isMatchingEnd(item.name, item.index, value.length)) {
+                rightText.textContent = item.name.substring(0, item.index);
+                leftText.textContent = item.name.substring(item.index, item.name.length);
+                leftText.classList.add('h-bold')
+            } else {
+                rightText.textContent = item.name.substring(0, item.index);
+                middleText.textContent = item.name.substring(item.index, item.index + value.length);
+                middleText.classList.add('h-bold')
+                leftText.textContent = item.name.substring(item.index + value.length, item.name.length);
+            }
         }
         icon.classList.add('c-search__icon');
         fullText.classList.add('c-search__autocomplete-item');
@@ -647,6 +709,7 @@ const renderAutocomplete = (matches, value) => {
     autocomplete.classList.add('c-search__autocomplete');
     autocomplete.appendChild(lastItem);
     container.appendChild(autocomplete);
+    addAutocompleteEvents();
 }
 
 const getCurrentFocus = () => {
@@ -693,6 +756,11 @@ const closeAutocomplete = () => {
     removeAutocompleteItems();
     container.classList.remove('c-search__autocomplete');
     autocompleteCloseBtn.classList.add('h-hide');
+    if (window.matchMedia('screen and (max-width: 550px)').matches) {
+        const search = document.querySelector('.c-search__input');
+        searchBtn.classList.remove('h-hide');
+        search.classList.add('h-hide-mobile');
+    }
     search.value = '';
 }
 
@@ -707,10 +775,11 @@ const handleSearchResults = (matches) => {
             post.parentElement.classList.remove('h-hide')
         }
     })
+    closeAutocomplete();
 }
 
 const handleSearch = (value, keyCode) => {
-    if (!value && value !== 0) return;
+    if (!value && value !== 0 && keyCode !== 13) return;
     const items = getSearchItems();
     const matches = getMatchingSearchItems(items, value);
     if (keyCode == 40 || keyCode == 38) {
@@ -721,6 +790,16 @@ const handleSearch = (value, keyCode) => {
         removeAutocompleteItems();
         renderAutocomplete(matches, value);
     }
+}
+
+const openSearchfield = () =>{
+    const search = document.querySelector('.c-search__input');
+    searchBtn.classList.add('h-hide');
+
+    if(search.classList.contains('h-hide-mobile')){
+        search.classList.remove('h-hide-mobile');
+    }
+    handleSearch('posts', 1);
 }
 
 const renderBlur = () => {
@@ -749,6 +828,10 @@ search.addEventListener('keyup', (e) => {
 
 });
 
+searchBtn.addEventListener('click', ()=>{
+    openSearchfield();
+});
+
 commentInput.forEach(field => {
     field.addEventListener('keyup', (event) => {
         handleCommentInput(event);
@@ -758,6 +841,11 @@ commentInput.forEach(field => {
 bioUpdateBtn.addEventListener('click', handleShowBioUpdate);
 
 bioCancelBtn.addEventListener('click', (e) => handleCloseBioUpdate(e));
+
+bioSubmitBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    handleBioSubmit();
+})
 
 popUpExitBtn.forEach(btn => {
     btn.addEventListener('click', (e) => handleClosePopUp(e));
@@ -834,83 +922,162 @@ const renderUpdatedComment = (id, value) => {
     handleClosePopUp();
 }
 
-const updateComment = (e) => {
-    e.preventDefault();
-    const id = commentUpdateBtn.getAttribute('value');
-    const comment = document.querySelector('.js-comment-update-field').value;
-    const API_ENDPOINT = "./includes/commentUpdate.inc.php";
-    const request = new XMLHttpRequest();
-    const formData = new FormData();
-
-    request.open("POST", API_ENDPOINT, true);
-    request.onreadystatechange = () => {
-        if (request.readyState === 4 && request.status === 200) {
-            renderUpdatedComment(id, comment);
-        }
-    };
-    formData.append("comment", comment);
-    formData.append('id', id);
-    request.send(formData);
-}
-
-const clearCommentInput = (id) => {
-    const input = document.querySelector(`[data-comment-submit=\"${id}\"]`);
-    input.value = '';
-}
-
-const createComment = (id, comment) => {
-    const API_ENDPOINT = "./includes/commentCreate.inc.php";
-    const request = new XMLHttpRequest();
-    const formData = new FormData();
-    
-    request.open("POST", API_ENDPOINT, true);
-    request.onreadystatechange = () => {
-        if (request.readyState === 4 && request.status === 200) {
-            clearCommentInput(id);
-            loadComments(id);
-        }
-    };
-    formData.append("comment", comment);
-    formData.append('id', id);
-    request.send(formData);
-}
-
-const deleteComment = id =>{
-    const comment = document.querySelector(`[data-comment-id="${id}"]`);
-    if(!comment) return;
-    comment.parentElement.removeChild(comment);
+const renderUpdatedPost = (id, value, file) => {
+    const text = document.querySelector(`[data-msg="${id}"]`);
+    text.textContent = value;
+    if (file) {
+        renderPhoto(file, renderPostPhoto, id);
+    }
     handleClosePopUp();
 }
 
-const deletePost = id =>{
-    const post = document.querySelector(`[data-post="${id}"]`);
-    if(!post) return;
-    post.parentElement.removeChild(post);
-    handleClosePopUp();
-}
-
-const deleteContent = (API_ENDPOINT, id, callback) => {
+const uploadContent = (id, value, API_ENDPOINT, callback, file = 0, previousPhotoPath = 0) => {
     const request = new XMLHttpRequest();
     const formData = new FormData();
-    
+
     request.open("POST", API_ENDPOINT, true);
     request.onreadystatechange = () => {
         if (request.readyState === 4 && request.status === 200) {
             callback();
         }
     };
+    formData.append("previousPhoto", previousPhotoPath);
+    formData.append("file", file);
+    formData.append("msg", value);
     formData.append('id', id);
     request.send(formData);
 }
 
+const handleCommentUpdate = () => {
+    const id = commentUpdateBtn.getAttribute('value');
+    const value = document.querySelector('.js-comment-update-field').value;
+    const API_ENDPOINT = "./includes/commentUpdate.inc.php";
+    uploadContent(id, value, API_ENDPOINT, () => {
+        renderUpdatedComment(id, value)
+    })
+}
 
-const handleDeleteContent = (btn) =>{
+const handlePostUpdate = () => {
+    const id = postSubmitBtn.value;
+    const value = postInput.value;
+    const API_ENDPOINT = "./includes/postUpdate.inc.php";
+    const file = document.querySelector('.js-post-img-btn').files[0];
+    if(file !== undefined){
+        const photo = document.querySelector(`[data-img="${id}"]`);
+        if (photo) {
+            const previousPhotoPath = photo.getAttribute("data-img-path");
+    
+            uploadContent(id, value, API_ENDPOINT, () => {
+                renderUpdatedPost(id, value, file)
+            }, file, previousPhotoPath)
+        } else {
+            uploadContent(id, value, API_ENDPOINT, () => {
+                renderUpdatedPost(id, value, file)
+            }, file)
+        }
+    }else{
+        uploadContent(id, value, API_ENDPOINT, () => {
+            renderUpdatedPost(id, value, file)
+        })
+    }
+}
+
+const clearCommentInput = (id) => {
+    const input = document.querySelector(`[data-comment-submit=\"${id}\"]`);
+    input.value = '';
+    const btn = document.querySelector(`[value="${id}"]`);
+
+    btn.classList.remove('h-comment-submit-btn');
+}
+
+const renderComment = id => {
+    clearCommentInput(id);
+    loadComments(id);
+    let commentStats = document.querySelector(`[data-comments="${id}"]`);
+
+    commentStats.textContent = `${parseInt(commentStats.textContent.split(' ')[0]) + 1} komentarai`;
+    if (commentStats.classList.contains('h-hide')) {
+        commentStats.classList.remove('h-hide');
+    }
+}
+
+const createComment = (id, comment) => {
+    const API_ENDPOINT = "./includes/commentCreate.inc.php";
+    const request = new XMLHttpRequest();
+    const formData = new FormData();
+
+    request.open("POST", API_ENDPOINT, true);
+    request.onreadystatechange = () => {
+        if (request.readyState === 4 && request.status === 200) {
+            renderComment(id);
+        }
+    };
+    formData.append("comment", comment);
+    formData.append('id', id);
+    request.send(formData);
+}
+
+const adjustCommentStatistics = id => {
+    let stats = document.querySelector(`[data-comments="${id}"]`);
+    const total = parseInt(stats.textContent.split(' ')[0]) - 1;
+    stats.textContent = `${total} komentarai`;
+    if (total === 0) {
+        stats.classList.add('h-hide');
+    }
+}
+
+const deleteComment = id => {
+    const comment = document.querySelector(`[data-comment-id="${id}"]`);
+    if (!comment) return;
+    const postId = comment.parentElement.getAttribute('data-id');
+    comment.parentElement.removeChild(comment);
+
+    adjustCommentStatistics(postId);
+    handleClosePopUp();
+}
+
+const deletePost = id => {
+    const post = document.querySelector(`[data-post="${id}"]`);
+    if (!post) return;
+    post.parentElement.removeChild(post);
+    handleClosePopUp();
+}
+
+const deleteContent = (API_ENDPOINT, id, callback, previousPhotoPath = 0) => {
+    const request = new XMLHttpRequest();
+    const formData = new FormData();
+
+    request.open("POST", API_ENDPOINT, true);
+    request.onreadystatechange = () => {
+        if (request.readyState === 4 && request.status === 200) {
+            callback();
+        }
+    };
+    formData.append('previousPhoto', previousPhotoPath)
+    formData.append('id', id);
+    request.send(formData);
+}
+
+const isClickedUpdateBtn = () => {
+    return postSubmitBtn.textContent === "Išsaugoti" ? true : false;
+}
+
+const handleDeleteContent = (btn) => {
     const API_ENDPOINT = btn.parentElement.getAttribute('action');
     const id = btn.value;
-    if(API_ENDPOINT === "./includes/postDelete.inc.php"){
-        deleteContent(API_ENDPOINT, id, ()=>{deletePost(id)});
-    }else if(API_ENDPOINT === "./includes/commentDelete.inc.php"){
-        deleteContent(API_ENDPOINT, id, ()=>{deleteComment(id)});
+    if (API_ENDPOINT === "./includes/postDelete.inc.php") {
+        let previousPhotoPath = 0;
+        const image = document.querySelector(`[data-img="${id}"]`);
+        if (image) {
+            previousPhotoPath = image.getAttribute('data-img-path');
+        }
+        deleteContent(API_ENDPOINT, id, () => {
+            deletePost(id)
+        }, previousPhotoPath);
+    } else if (API_ENDPOINT === "./includes/commentDelete.inc.php") {
+        deleteContent(API_ENDPOINT, id, () => {
+            deleteComment(id)
+        });
     }
 }
 
@@ -920,11 +1087,24 @@ navSelectBtns.forEach(btn => {
     });
 });
 
+postSubmitBtn.addEventListener('click', (e) => {
+    if (isClickedUpdateBtn()) { //not create
+        e.preventDefault();
+        handlePostUpdate();
+    }
+})
+
 postImageBtn.addEventListener('change', showFileName);
 
-coverUploadPhotoBtn.addEventListener('change', uploadCoverPhoto);
+coverUploadPhotoBtn.addEventListener('change', () => {
+    const file = coverUploadPhotoBtn.files[0];
+    renderPhoto(file, renderCoverPhoto);
+});
 
-profileUploadPhotoBtn.addEventListener('change', uploadProfilePhoto);
+profileUploadPhotoBtn.addEventListener('change', () => {
+    const file = profileUploadPhotoBtn.files[0];
+    renderPhoto(file, renderProfilePhoto);
+});
 
 postCancelImgBtn.addEventListener('click', (e) => handleCancelImagePost(e));
 
@@ -962,7 +1142,10 @@ commentToggleBtn.forEach(btn => {
     });
 });
 
-commentUpdateBtn.addEventListener('click', (e) => updateComment(e));
+commentUpdateBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    handleCommentUpdate();
+});
 
 commentCreateBtn.forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -973,8 +1156,8 @@ commentCreateBtn.forEach(btn => {
     });
 });
 
-commentDeleteBtn.forEach(btn =>{
-    btn.addEventListener('click', (e)=>{
+commentDeleteBtn.forEach(btn => {
+    btn.addEventListener('click', (e) => {
         e.preventDefault();
         handleDeleteContent(btn);
     })

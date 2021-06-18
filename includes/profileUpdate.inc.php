@@ -6,7 +6,10 @@
         $newImg = new Image();
         $photo = $newImg->uploadImg($_FILES);
         $userId = $_SESSION['userId'];
-        
+        echo $photo;
         $user = new User();
-        $user->updateProfileImg($photo, $userId);
+        $success = $user->updateProfileImg($photo, $userId);
+        if($success === true && $_POST['previousPhoto'] !== 0 && file_exists($_POST['previousPhoto'])){
+            unlink($_POST['previousPhoto']);
+        }
     }
